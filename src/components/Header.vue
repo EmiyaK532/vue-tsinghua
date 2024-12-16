@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import 'animate.css'
 
 const { locale } = useI18n()
 const currentLang = ref(locale.value)
@@ -16,7 +17,16 @@ const switchLanguage = () => {
     <div class="header-content">
       <!-- Logo区域 -->
       <div class="logo-area">
-        <img src="../assets/logo/logo1.png" alt="实验室" />
+        <!-- <img src="../assets/logo/logo1.png" alt="实验室" /> -->
+        <div class="title-wrapper">
+          <h1 class="animate__animated animate__fadeIn">
+            <span class="animate__animated animate__slideInLeft">中国矿业大学</span>
+            <span class="animate__animated animate__slideInRight">全国重点实验室</span>
+          </h1>
+          <p class="subtitle animate__animated animate__fadeIn animate__delay-1s">
+            NATIONAL KEY LABORATORY OF CHINA UNIVERSITY OF MINING AND TECHNOLOGY
+          </p>
+        </div>
       </div>
 
       <!-- 导航区域 -->
@@ -43,27 +53,45 @@ const switchLanguage = () => {
 
 <style scoped>
 .site-header {
-  background: rgba(255, 255, 255, 0.95);
+  /* 渐变背景：从左到右透明度逐渐增加 */
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.95) 15%,
+    rgba(255, 255, 255, 0.98) 25%,
+    rgba(255, 255, 255, 0.98) 100%
+  );
   backdrop-filter: blur(5px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 0.8rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  position: relative;
+  /* 添加右侧圆角 */
+  border-bottom-right-radius: 20px;
+  border-top-right-radius: 20px;
 }
 
 .header-content {
-  max-width: 1800px; /* 增加最大宽度 */
+  max-width: 1800px;
   margin: 0 auto;
   padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8rem; /* 增加logo和导航之间的间距 */
+  gap: 15rem;
+  height: 100%;
+  /* 确保内容区域也有圆角，防止内容溢出 */
+  border-bottom-right-radius: 20px;
+  overflow: hidden;
 }
 
 .logo-area {
   display: flex;
   align-items: center;
   flex-shrink: 0;
-  min-width: 300px; /* 增加logo区域的最小宽度 */
+  min-width: 300px;
   height: 60px;
 }
 
@@ -76,7 +104,7 @@ const switchLanguage = () => {
 .nav-area {
   display: flex;
   align-items: center;
-  gap: 3rem; /* 增加导航项之间的间距 */
+  gap: 3rem;
   justify-content: flex-end;
   flex: 1;
 }
@@ -88,7 +116,7 @@ const switchLanguage = () => {
 
 .main-nav ul {
   display: flex;
-  gap: 3rem; /* 增加导航项之间的间距 */
+  gap: 3rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -161,13 +189,22 @@ const switchLanguage = () => {
 
 @media (max-width: 768px) {
   .site-header {
-    padding: 0.6rem 0;
+    height: auto;
+    padding: 0.8rem 0;
+    background: linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.6) 0%,
+      rgba(255, 255, 255, 0.98) 30%
+    );
+    /* 移动端可以适当减小圆角 */
+    border-bottom-right-radius: 15px;
   }
 
   .header-content {
     padding: 0 1rem;
     flex-direction: column;
     gap: 1rem;
+    border-bottom-right-radius: 15px;
   }
 
   .logo-area {
@@ -193,6 +230,75 @@ const switchLanguage = () => {
 
   .lang-switch {
     margin-top: 0.5rem;
+  }
+
+  .site-header::after {
+    border-bottom-right-radius: 15px;
+  }
+}
+
+/* 底部边框渐变效果，需要考虑圆角 */
+.site-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.02) 0%,
+    rgba(0, 0, 0, 0.05) 50%,
+    rgba(0, 0, 0, 0.02) 100%
+  );
+  /* 保持与header相同的圆角 */
+  border-bottom-right-radius: 20px;
+}
+
+.title-wrapper {
+  margin-left: 1rem;
+}
+
+h1 {
+  font-size: 1.5rem;
+  color: #333;
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: #666;
+  margin: 0.3rem 0 0 0;
+  opacity: 0.8;
+}
+
+/* 确保动画元素初始状态不可见 */
+.animate__slideInLeft {
+  --animate-duration: 1s;
+  animation-delay: 0.2s;
+}
+
+.animate__slideInRight {
+  --animate-duration: 1s;
+  animation-delay: 0.4s;
+}
+
+.animate__fadeIn {
+  --animate-duration: 1.5s;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .title-wrapper h1 {
+    font-size: 1.2rem;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .subtitle {
+    font-size: 0.7rem;
   }
 }
 </style> 

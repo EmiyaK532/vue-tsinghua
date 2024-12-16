@@ -5,12 +5,16 @@ import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
 import NewsCarousel from './components/NewsCarousel.vue'
 import NewsList from './components/NewsList.vue'
+import 'animate.css'
 
 const { t } = useI18n()
 </script>
 
 <template>
   <div class="app-wrapper">
+    <div class="animated-bg left"></div>
+    <div class="animated-bg right"></div>
+    
     <div class="app-container">
       <Header class="floating-header" />
       
@@ -55,8 +59,10 @@ const { t } = useI18n()
 <style scoped>
 .app-wrapper {
   min-height: 100vh;
-  background: #2d94d0; /* 紫色背景 */
-  padding: 0 60px 60px 60px; /* 左右下方留白 */
+  background: #2d94d0;
+  padding: 0 60px 60px 60px;
+  position: relative;
+  overflow: hidden;
 }
 
 .app-container {
@@ -120,10 +126,109 @@ h2 {
   border-bottom: 2px solid #1a6eb5;
 }
 
-/* 响应式布局 */
+/* 左侧动态背景 */
+.animated-bg.left {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(
+    45deg,
+    rgba(45, 148, 208, 0.8) 0%,
+    rgba(45, 148, 208, 0.9) 50%,
+    rgba(45, 148, 208, 0.8) 100%
+  );
+  backdrop-filter: blur(10px);
+  animation: gradientBG 8s ease infinite;
+}
+
+/* 右侧动态背景 */
+.animated-bg.right {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(45, 148, 208, 0.8) 0%,
+    rgba(45, 148, 208, 0.9) 50%,
+    rgba(45, 148, 208, 0.8) 100%
+  );
+  backdrop-filter: blur(10px);
+  animation: gradientBG 8s ease infinite reverse;
+}
+
+/* 毛玻璃效果 */
+.animated-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  backdrop-filter: blur(20px);
+  animation: blurPulse 4s ease-in-out infinite;
+}
+
+/* 动态渐变动画 */
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* 毛玻璃效果动画 */
+@keyframes blurPulse {
+  0% {
+    backdrop-filter: blur(10px);
+  }
+  50% {
+    backdrop-filter: blur(20px);
+  }
+  100% {
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* 添加浮动粒子效果 */
+.animated-bg::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(
+    circle at center,
+    rgba(255, 255, 255, 0.2) 0%,
+    transparent 60%
+  );
+  background-size: 15px 15px;
+  animation: particleFloat 20s linear infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+/* 响应式调整 */
 @media (max-width: 1400px) {
   .app-wrapper {
     padding: 0 40px 40px 40px;
+  }
+  .animated-bg {
+    width: 40px;
   }
 }
 
@@ -131,24 +236,19 @@ h2 {
   .app-wrapper {
     padding: 0 30px 30px 30px;
   }
+  .animated-bg {
+    width: 30px;
+  }
 }
 
 @media (max-width: 768px) {
   .app-wrapper {
     padding: 0 15px 15px 15px;
   }
-
-  .main-content {
-    flex-direction: column;
-    padding: 0 10px;
-  }
-
-  .content-grid {
-    grid-template-columns: 1fr;
-  }
-
-  section {
-    margin-bottom: 1rem;
+  .animated-bg {
+    width: 15px;
   }
 }
+
+/* 其他现有样式保持不变... */
 </style>
