@@ -10,63 +10,82 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="app-container">
-    <Header />
-    
-    <!-- 新闻轮播区域 - 全宽度显示 -->
-    <div class="carousel-wrapper">
-      <NewsCarousel />
-    </div>
-    
-    <!-- 主要内容区域 - 带边距 -->
-    <div class="main-content">
-      <div class="content-wrapper">
-        <div class="content-grid">
-          <!-- 新闻动态 -->
-          <section class="news-section">
-            <h2>{{ t('news.title') }}</h2>
-            <NewsList />
-          </section>
-
-          <!-- 通知公告 -->
-          <section class="announcement-section">
-            <h2>{{ t('announcements.title') }}</h2>
-            <div class="announcement-list">
-              <!-- 公告列表将在组件中实现 -->
-            </div>
-          </section>
-
-          <!-- 研究亮点 -->
-          <section class="highlights-section">
-            <h2>{{ t('research.highlights') }}</h2>
-            <div class="highlights-list">
-              <!-- 研究亮点列表将在组件中实现 -->
-            </div>
-          </section>
-        </div>
+  <div class="app-wrapper">
+    <div class="app-container">
+      <Header class="floating-header" />
+      
+      <!-- 轮播图区域 -->
+      <div class="carousel-section">
+        <NewsCarousel />
       </div>
       
-      <Sidebar />
+      <!-- 主要内容区域 -->
+      <div class="main-content">
+        <div class="content-wrapper">
+          <div class="content-grid">
+            <!-- 新闻动态 -->
+            <section class="news-section">
+              <h2>{{ t('news.title') }}</h2>
+              <NewsList />
+            </section>
+
+            <!-- 通知公告 -->
+            <section class="announcement-section">
+              <h2>{{ t('announcements.title') }}</h2>
+              <div class="announcement-list">
+                <!-- 公告列表将在组件中实现 -->
+              </div>
+            </section>
+
+            <!-- 研究亮点 -->
+            <section class="highlights-section">
+              <h2>{{ t('research.highlights') }}</h2>
+              <div class="highlights-list">
+                <!-- 研究亮点列表将在组件中实现 -->
+              </div>
+            </section>
+          </div>
+        </div>
+        <Sidebar />
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.app-container {
+.app-wrapper {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background-color: #f5f5f5;
+  background: #2d94d0; /* 紫色背景 */
+  padding: 0 60px 60px 60px; /* 左右下方留白 */
 }
 
-.carousel-wrapper {
+.app-container {
+  position: relative;
   width: 100%;
-  background-color: #fff;
+  min-height: 100vh;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.floating-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.carousel-section {
+  position: relative;
+  width: 100%;
   margin-bottom: 2rem;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
 
 .main-content {
+  position: relative;
+  z-index: 1;
   display: flex;
   margin: 0 auto;
   max-width: 1200px;
@@ -102,7 +121,23 @@ h2 {
 }
 
 /* 响应式布局 */
+@media (max-width: 1400px) {
+  .app-wrapper {
+    padding: 0 40px 40px 40px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .app-wrapper {
+    padding: 0 30px 30px 30px;
+  }
+}
+
 @media (max-width: 768px) {
+  .app-wrapper {
+    padding: 0 15px 15px 15px;
+  }
+
   .main-content {
     flex-direction: column;
     padding: 0 10px;

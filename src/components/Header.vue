@@ -16,7 +16,7 @@ const switchLanguage = () => {
     <div class="header-content">
       <!-- Logo和导航在同一行 -->
       <div class="logo-area">
-        <img src="../assets/logo/logo.png" alt="清华大学摩擦学国家重点实验室" />
+        <img src="../assets/logo/logo1.png" alt="清华大学摩擦学国家重点实验室" />
       </div>
 
       <div class="nav-area">
@@ -42,9 +42,10 @@ const switchLanguage = () => {
 
 <style scoped>
 .site-header {
-  background: #fff;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem 0;
+  padding: 0.8rem 0;
 }
 
 .header-content {
@@ -62,14 +63,14 @@ const switchLanguage = () => {
   align-items: center;
   flex-shrink: 0;
   min-width: 200px;
-  height: 120px;
+  height: 80px;
 }
 
 .logo-area img {
   height: 100%;
   width: auto;
   object-fit: contain;
-  max-height: 120px;
+  max-height: 80px;
 }
 
 .nav-area {
@@ -136,12 +137,12 @@ const switchLanguage = () => {
 /* 响应式调整 */
 @media (max-width: 1024px) {
   .logo-area {
-    height: 100px;
+    height: 70px;
     min-width: 160px;
   }
   
   .logo-area img {
-    max-height: 100px;
+    max-height: 70px;
   }
 
   .main-nav ul {
@@ -151,22 +152,22 @@ const switchLanguage = () => {
 
 @media (max-width: 768px) {
   .site-header {
-    padding: 1rem 0;
+    padding: 0.6rem 0;
   }
 
   .header-content {
     padding: 0 1rem;
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
   }
 
   .logo-area {
-    height: 80px;
+    height: 60px;
     min-width: 120px;
   }
 
   .logo-area img {
-    max-height: 80px;
+    max-height: 60px;
   }
 
   .nav-area {

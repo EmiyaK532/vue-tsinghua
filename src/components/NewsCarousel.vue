@@ -39,7 +39,7 @@ const news = ref<NewsItem[]>([
 <template>
   <div class="news-carousel-container">
     <div class="news-carousel">
-      <el-carousel :interval="4000" height="500px">
+      <el-carousel :interval="4000" height="600px">
         <el-carousel-item v-for="item in news" :key="item.id">
           <div class="carousel-content">
             <img :src="item.image" :alt="item.title">
@@ -56,13 +56,13 @@ const news = ref<NewsItem[]>([
 <style scoped>
 .news-carousel-container {
   width: 100%;
-  background: #fff;
+  position: relative;
+  margin-top: -60px;
 }
 
 .news-carousel {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0;
+  width: 100%;
+  overflow: hidden;
 }
 
 .carousel-content {
@@ -93,14 +93,34 @@ const news = ref<NewsItem[]>([
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
-/* 响应式调整 */
+@media (max-width: 1400px) {
+  .side-space {
+    width: 6vw;
+  }
+}
+
+@media (max-width: 1200px) {
+  .side-space {
+    width: 4vw;
+  }
+}
+
 @media (max-width: 768px) {
-  .news-carousel {
-    padding: 0;
+  .news-carousel-container {
+    margin-top: -45px;
   }
 
-  .el-carousel {
-    height: 300px !important;
+  .side-space {
+    width: 3vw;
+    min-width: 30px;
+  }
+
+  :deep(.el-carousel__container) {
+    height: 400px !important;
+  }
+
+  .side-space {
+    height: 400px;
   }
 
   .news-overlay {
@@ -112,10 +132,10 @@ const news = ref<NewsItem[]>([
   }
 }
 
-/* 大屏幕优化 */
-@media (min-width: 1920px) {
-  .news-carousel {
-    max-width: 1600px;
+@media (max-width: 480px) {
+  .side-space {
+    width: 2vw;
+    min-width: 15px;
   }
 }
 </style> 
