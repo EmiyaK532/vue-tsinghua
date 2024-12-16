@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ElCarousel, ElCarouselItem } from 'element-plus'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 // 导入图片
 import news1 from '@/assets/images/news/news1.jpg'
@@ -34,178 +33,240 @@ const news = ref<NewsItem[]>([
     link: "#"
   }
 ])
+
+const currentIndex = ref(0)
+const isAnimating = ref(false)
+let autoplayTimer: number | null = null
+
+const next = () => {
+  if (isAnimating.value) return
+  isAnimating.value = true
+  currentIndex.value = (currentIndex.value + 1) % news.value.length
+  setTimeout(() => {
+    isAnimating.value = false
+  }, 1200)
+}
+
+const prev = () => {
+  if (isAnimating.value) return
+  isAnimating.value = true
+  currentIndex.value = currentIndex.value === 0 ? news.value.length - 1 : currentIndex.value - 1
+  setTimeout(() => {
+    isAnimating.value = false
+  }, 1200)
+}
+
+const startAutoplay = () => {
+  autoplayTimer = window.setInterval(next, 5000)
+}
+
+const stopAutoplay = () => {
+  if (autoplayTimer) {
+    clearInterval(autoplayTimer)
+    autoplayTimer = null
+  }
+}
+
+onMounted(() => {
+  startAutoplay()
+})
+
+onBeforeUnmount(() => {
+  stopAutoplay()
+})
 </script>
 
 <template>
-  <div class="news-carousel-container">
-    <div class="news-carousel">
-      <el-carousel 
-        :interval="5000" 
-        arrow="always"
-        :autoplay="true"
-        trigger="click"
-        :initial-index="0"
-        height="600px"
-      >
-        <el-carousel-item v-for="item in news" :key="item.id">
-          <div class="carousel-content">
+  <div class="carousel-container" 
+       @mouseenter="stopAutoplay" 
+       @mouseleave="startAutoplay">
+    <div class="carousel-wrapper">
+      <div class="carousel-slides" 
+           :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
+        <div v-for="(item, index) in news" 
+             :key="item.id" 
+             class="carousel-slide"
+             :class="{
+               'is-active': index === currentIndex,
+               'is-prev': (index === currentIndex - 1) || (currentIndex === 0 && index === news.length - 1),
+               'is-next': (index === currentIndex + 1) || (currentIndex === news.length - 1 && index === 0)
+             }">
+          <div class="slide-content">
             <img :src="item.image" :alt="item.title">
-            <div class="news-overlay">
+            <div class="slide-overlay">
               <h3>{{ item.title }}</h3>
             </div>
           </div>
-        </el-carousel-item>
-      </el-carousel>
+        </div>
+      </div>
+    </div>
+
+    <button class="carousel-arrow prev" @click="prev">
+      <i class="arrow-icon">←</i>
+    </button>
+    <button class="carousel-arrow next" @click="next">
+      <i class="arrow-icon">→</i>
+    </button>
+
+    <div class="carousel-indicators">
+      <button v-for="(_, index) in news" 
+              :key="index"
+              class="indicator"
+              :class="{ active: index === currentIndex }"
+              @click="currentIndex = index">
+      </button>
     </div>
   </div>
 </template>
 
 <style scoped>
-.news-carousel-container {
+.carousel-container {
   width: 100%;
+  height: 600px;
   position: relative;
   margin-top: -60px;
-}
-
-.news-carousel {
-  width: 100%;
+  perspective: 2000px;
   overflow: hidden;
 }
 
-/* 轮播图容器样式 */
-:deep(.el-carousel__container) {
-  position: relative;
-}
-
-/* 轮播项样式 */
-:deep(.el-carousel__item) {
-  overflow: hidden;
-  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center center;
-}
-
-/* 当前显示的轮播项 */
-:deep(.el-carousel__item.is-active) {
-  z-index: 2;
-  transform: scale(1) translateZ(0);
-}
-
-/* 即将显示的轮播项 */
-:deep(.el-carousel__item.is-animating) {
-  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* 隐藏的轮播项 */
-:deep(.el-carousel__item:not(.is-active)) {
-  transform: scale(1.4) translateZ(-100px);
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* 箭头样式 */
-:deep(.el-carousel__arrow) {
-  background-color: rgba(0, 0, 0, 0.3);
-  border: none;
-  width: 44px;
-  height: 44px;
-  transition: all 0.3s ease;
-}
-
-:deep(.el-carousel__arrow:hover) {
-  background-color: rgba(0, 0, 0, 0.5);
-}
-
-/* 指示器样式 */
-:deep(.el-carousel__indicators) {
-  bottom: 20px;
-}
-
-:deep(.el-carousel__indicator) {
-  padding: 12px 4px;
-}
-
-:deep(.el-carousel__button) {
-  width: 30px;
-  height: 2px;
-  background-color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s;
-}
-
-:deep(.el-carousel__indicator.is-active .el-carousel__button) {
-  background-color: #fff;
-}
-
-.carousel-content {
-  position: relative;
+.carousel-wrapper {
   width: 100%;
   height: 100%;
-  transform-origin: center center;
-  perspective: 1000px;
+  position: relative;
+  transform-style: preserve-3d;
 }
 
-.carousel-content img {
+.carousel-slides {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-slide {
+  min-width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-content {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.carousel-slide img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-origin: center center;
-  will-change: transform;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.news-overlay {
+.carousel-slide.is-active {
+  z-index: 2;
+  transform: translateZ(0) scale(1);
+}
+
+.carousel-slide.is-prev,
+.carousel-slide.is-next {
+  transform: translateZ(400px) scale(1.4);
+  opacity: 0;
+}
+
+.slide-overlay {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
   padding: 30px;
+  color: white;
   opacity: 0;
   transform: translateY(20px);
   transition: all 0.6s ease;
 }
 
-/* 活动项的遮罩层动画 */
-:deep(.el-carousel__item.is-active) .news-overlay {
+.carousel-slide.is-active .slide-overlay {
   opacity: 1;
   transform: translateY(0);
 }
 
-.news-overlay h3 {
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 50%;
   color: white;
-  margin: 0;
-  font-size: 1.5rem;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s;
+  z-index: 10;
 }
 
-/* 响应式调整 */
+.carousel-arrow:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.carousel-arrow.prev {
+  left: 20px;
+}
+
+.carousel-arrow.next {
+  right: 20px;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+
+.indicator {
+  width: 30px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.7);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.indicator.active {
+  background: white;
+}
+
 @media (max-width: 768px) {
-  .news-carousel-container {
+  .carousel-container {
+    height: 500px;
     margin-top: -45px;
   }
 
-  :deep(.el-carousel__container) {
-    height: 500px !important;
-  }
-
-  .news-overlay {
-    padding: 15px;
-  }
-
-  .news-overlay h3 {
-    font-size: 1.2rem;
-  }
-
-  :deep(.el-carousel__arrow) {
+  .carousel-arrow {
     width: 36px;
     height: 36px;
   }
 
-  :deep(.el-carousel__indicators) {
-    bottom: 10px;
+  .slide-overlay {
+    padding: 15px;
   }
 
-  :deep(.el-carousel__button) {
-    width: 20px;
+  .slide-overlay h3 {
+    font-size: 1.2rem;
   }
 }
 </style> 
