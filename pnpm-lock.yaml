@@ -29,6 +29,9 @@ importers:
       vue-i18n:
         specifier: ^9.2.0
         version: 9.14.2(vue@3.3.4)
+      vue-router:
+        specifier: ^4.5.0
+        version: 4.5.0(vue@3.3.4)
     devDependencies:
       '@types/node':
         specifier: ^20.11.0
@@ -1058,6 +1061,11 @@ packages:
     engines: {node: '>= 16'}
     peerDependencies:
       vue: ^3.0.0
+
+  vue-router@4.5.0:
+    resolution: {integrity: sha512-HDuk+PuH5monfNuY+ct49mNmkCRK4xJAV9Ts4z9UFc4rzdDnxQLyCMGGc8pKhZhHTVzfanpNwB/lwqevcBwI4w==, tarball: https://registry.npmmirror.com/vue-router/-/vue-router-4.5.0.tgz}
+    peerDependencies:
+      vue: ^3.2.0
 
   vue@3.3.4:
     resolution: {integrity: sha512-VTyEYn3yvIeY1Py0WaYGZsXnz3y5UnGi62GjVEqvEGPl6nxbOrCXbVOTQWBEJUqAyTUk2uJ5JLVnYJ6ZzGbrSw==, tarball: https://registry.npmmirror.com/vue/-/vue-3.3.4.tgz}
@@ -2222,6 +2230,11 @@ snapshots:
     dependencies:
       '@intlify/core-base': 9.14.2
       '@intlify/shared': 9.14.2
+      '@vue/devtools-api': 6.6.4
+      vue: 3.3.4
+
+  vue-router@4.5.0(vue@3.3.4):
+    dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.3.4
 

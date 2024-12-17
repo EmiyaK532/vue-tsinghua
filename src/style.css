@@ -11,6 +11,11 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --z-index-base: 1;
+  --z-index-carousel: 2;
+  --z-index-header: 1000;
+  --z-index-dropdown: 1001;
 }
 
 a {
@@ -63,6 +68,8 @@ button:focus-visible {
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  position: relative;
+  z-index: var(--z-index-base);
 }
 
 @media (prefers-color-scheme: light) {
@@ -76,4 +83,21 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+/* 确保下拉菜单容器总是在最上层 */
+#dropdown-portal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 99999;
+}
+
+#dropdown-portal > * {
+  pointer-events: auto;
+  position: absolute;
 }

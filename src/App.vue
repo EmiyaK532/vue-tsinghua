@@ -6,6 +6,7 @@ import Sidebar from './components/Sidebar.vue'
 import NewsCarousel from './components/NewsCarousel.vue'
 import NewsList from './components/NewsList.vue'
 import 'animate.css'
+// import "./style.css"
 
 const { t } = useI18n()
 </script>
@@ -18,39 +19,41 @@ const { t } = useI18n()
     <div class="app-container">
       <Header class="floating-header" />
       
-      <!-- 轮播图区域 -->
-      <div class="carousel-section">
-        <NewsCarousel />
-      </div>
-      
-      <!-- 主要内容区域 -->
-      <div class="main-content">
-        <div class="content-wrapper">
-          <div class="content-grid">
-            <!-- 新闻动态 -->
-            <section class="news-section">
-              <h2>{{ t('news.title') }}</h2>
-              <NewsList />
-            </section>
-
-            <!-- 通知公告 -->
-            <section class="announcement-section">
-              <h2>{{ t('announcements.title') }}</h2>
-              <div class="announcement-list">
-                <!-- 公告列表将在组件中实现 -->
-              </div>
-            </section>
-
-            <!-- 研究亮点 -->
-            <section class="highlights-section">
-              <h2>{{ t('research.highlights') }}</h2>
-              <div class="highlights-list">
-                <!-- 研究亮点列表将在组件中实现 -->
-              </div>
-            </section>
-          </div>
+      <div class="main-wrapper">
+        <!-- 轮播图区域 -->
+        <div class="carousel-section">
+          <NewsCarousel />
         </div>
-        <Sidebar />
+        
+        <!-- 主要内容区域 -->
+        <div class="main-content">
+          <div class="content-wrapper">
+            <div class="content-grid">
+              <!-- 新闻动态 -->
+              <section class="news-section">
+                <h2>{{ t('news.title') }}</h2>
+                <NewsList />
+              </section>
+
+              <!-- 通知公告 -->
+              <section class="announcement-section">
+                <h2>{{ t('announcements.title') }}</h2>
+                <div class="announcement-list">
+                  <!-- 公告列表将在组件中实现 -->
+                </div>
+              </section>
+
+              <!-- 研究亮点 -->
+              <section class="highlights-section">
+                <h2>{{ t('research.highlights') }}</h2>
+                <div class="highlights-list">
+                  <!-- 研究亮点列表将在组件中实现 -->
+                </div>
+              </section>
+            </div>
+          </div>
+          <Sidebar />
+        </div>
       </div>
     </div>
   </div>
@@ -63,6 +66,7 @@ const { t } = useI18n()
   padding: 0 60px 60px 60px;
   position: relative;
   overflow: hidden;
+  z-index: 0;
 }
 
 .app-container {
@@ -72,15 +76,19 @@ const { t } = useI18n()
   background: #fff;
   display: flex;
   flex-direction: column;
+  overflow: visible;
+}
+
+.main-wrapper {
+  padding-top: 60px;
+  position: relative;
 }
 
 .floating-header {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
 }
 
 .carousel-section {
@@ -91,7 +99,6 @@ const { t } = useI18n()
 
 .main-content {
   position: relative;
-  z-index: 1;
   display: flex;
   margin: 0 auto;
   max-width: 1200px;
@@ -251,4 +258,24 @@ h2 {
 }
 
 /* 其他现有样式保持不变... */
+
+/* 添加全局层级控制 */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.main-content {
+  margin-top: 60px; /* header的高度 */
+  position: relative;
+}
+
+/* 轮播图层级控制 */
+.carousel-container {
+  position: relative;
+  z-index: 1;
+}
 </style>

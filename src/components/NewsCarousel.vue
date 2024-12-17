@@ -131,8 +131,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 600px;
   position: relative;
-  margin-top: -60px;
-  perspective: 2000px;
   overflow: hidden;
 }
 
@@ -140,7 +138,6 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 100%;
   position: relative;
-  transform-style: preserve-3d;
 }
 
 .carousel-slides {
@@ -219,7 +216,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
-  z-index: 10;
+  z-index: 2;
 }
 
 .carousel-arrow:hover {
@@ -241,7 +238,7 @@ onBeforeUnmount(() => {
   transform: translateX(-50%);
   display: flex;
   gap: 8px;
-  z-index: 10;
+  z-index: 2;
 }
 
 .indicator {

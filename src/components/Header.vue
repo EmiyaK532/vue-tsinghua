@@ -6,9 +6,76 @@ import 'animate.css'
 const { locale } = useI18n()
 const currentLang = ref(locale.value)
 
-const switchLanguage = () => {
-  locale.value = locale.value === 'zh' ? 'en' : 'zh'
-  currentLang.value = locale.value
+// 添加延时处理
+let hideTimeout: number | null = null
+
+// 定义导航菜单结构
+const navItems = [
+  {
+    title: '首页',
+    path: '/',
+  },
+  {
+    title: '实验室简介',
+    path: '/about',
+    children: [
+      { title: '实验室概况', path: '/about/overview' },
+      { title: '主任致词', path: '/about/director' },
+      { title: '历史沿革', path: '/about/history' },
+      { title: '科研任务', path: '/about/research' },
+      { title: '现任领导', path: '/about/leadership' },
+    ]
+  },
+  {
+    title: '科学研究',
+    path: '/research',
+    children: [
+      { title: '研究方向', path: '/research/directions' },
+      { title: '科研成果', path: '/research/achievements' },
+      { title: '获奖情况', path: '/research/awards' },
+    ]
+  },
+  // ... 其他菜单项
+]
+
+// 当前激活的下拉菜单和位置
+const activeDropdown = ref<{
+  path: string;
+  rect?: { top: number; left: number; width: number };
+} | null>(null)
+
+// 显示下拉菜单
+const showDropdown = (path: string, event: MouseEvent) => {
+  if (hideTimeout) {
+    clearTimeout(hideTimeout)
+    hideTimeout = null
+  }
+  const target = event.currentTarget as HTMLElement
+  const rect = target.getBoundingClientRect()
+  activeDropdown.value = {
+    path,
+    rect: {
+      top: rect.bottom,
+      left: rect.left,
+      width: rect.width
+    }
+  }
+}
+
+// 隐藏下拉菜单
+const hideDropdown = () => {
+  hideTimeout = window.setTimeout(() => {
+    activeDropdown.value = null
+    hideTimeout = null
+  }, 100)
+}
+
+// 取消隐藏
+const cancelHide = () => {
+  if (hideTimeout) {
+    clearTimeout(hideTimeout)
+    hideTimeout = null
+  }
 }
 </script>
 
@@ -33,11 +100,16 @@ const switchLanguage = () => {
       <div class="nav-area">
         <nav class="main-nav">
           <ul>
-            <li><a href="#">首页</a></li>
-            <li><a href="#">实验室简介</a></li>
-            <li><a href="#">科学研究</a></li>
-            <li><a href="#">学术期刊</a></li>
-            <li><a href="#">人才培养</a></li>
+            <li v-for="item in navItems" 
+                :key="item.path"
+                class="nav-item"
+                @mouseenter="(e) => item.children && showDropdown(item.path, e)"
+                @mouseleave="hideDropdown">
+              <RouterLink :to="item.path">
+                {{ item.title }}
+                <span v-if="item.children" class="arrow">▼</span>
+              </RouterLink>
+            </li>
           </ul>
         </nav>
 
@@ -49,11 +121,36 @@ const switchLanguage = () => {
       </div>
     </div>
   </header>
+
+  <!-- 使用 Teleport 将下拉菜单移到 body 层级 -->
+  <Teleport to="body">
+    <transition
+      enter-active-class="animate__animated animate__fadeIn"
+      leave-active-class="animate__animated animate__fadeOut">
+      <div v-if="activeDropdown && activeDropdown.rect"
+           class="global-dropdown"
+           :style="{
+             top: `${activeDropdown.rect.top}px`,
+             left: `${activeDropdown.rect.left}px`,
+             width: `${activeDropdown.rect.width}px`,
+           }"
+           @mouseenter="cancelHide"
+           @mouseleave="hideDropdown">
+        <div class="dropdown-content">
+          <RouterLink v-for="child in navItems.find(i => i.path === activeDropdown.path)?.children"
+                     :key="child.path"
+                     :to="child.path"
+                     class="dropdown-item">
+            {{ child.title }}
+          </RouterLink>
+        </div>
+      </div>
+    </transition>
+  </Teleport>
 </template>
 
 <style scoped>
 .site-header {
-  /* 渐变背景：从左到右透明度逐渐增加 */
   background: linear-gradient(
     to right,
     rgba(255, 255, 255, 0.4) 0%,
@@ -67,10 +164,13 @@ const switchLanguage = () => {
   display: flex;
   align-items: center;
   padding: 0;
-  position: relative;
-  /* 添加右侧圆角 */
+  position: fixed;
   border-bottom-right-radius: 20px;
   border-top-right-radius: 20px;
+  z-index: 1000;
+  width: 100%;
+  left: 0;
+  top: 0;
 }
 
 .header-content {
@@ -107,11 +207,14 @@ const switchLanguage = () => {
   gap: 3rem;
   justify-content: flex-end;
   flex: 1;
+  position: relative;
+  z-index: 2;
 }
 
 .main-nav {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .main-nav ul {
@@ -125,24 +228,15 @@ const switchLanguage = () => {
 .main-nav a {
   color: #333;
   text-decoration: none;
-  font-size: 1rem;
-  padding: 0.5rem 0;
+  font-size: 16px;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
   position: relative;
-  white-space: nowrap;
 }
 
-.main-nav a:hover {
+.main-nav a:hover,
+.main-nav a.router-link-active {
   color: #1a6eb5;
-}
-
-.main-nav a:hover::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background-color: #1a6eb5;
 }
 
 .lang-switch button {
@@ -286,7 +380,11 @@ h1 {
 }
 
 .animate__fadeIn {
-  --animate-duration: 1.5s;
+  --animate-duration: 0.2s;
+}
+
+.animate__fadeOut {
+  --animate-duration: 0.15s;
 }
 
 /* 响应式调整 */
@@ -300,5 +398,69 @@ h1 {
   .subtitle {
     font-size: 0.7rem;
   }
+}
+
+.nav-item {
+  position: relative;
+  padding: 20px 0;
+}
+
+.arrow {
+  display: inline-block;
+  font-size: 12px;
+  margin-left: 4px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .arrow {
+  transform: rotate(180deg);
+}
+
+/* 全局下拉菜单样式 */
+.global-dropdown {
+  position: fixed;
+  z-index: 99999;
+  background: white;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
+  overflow: hidden;
+  pointer-events: auto;  /* 确保可以接收鼠标事件 */
+}
+
+.dropdown-content {
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.dropdown-item {
+  display: block;
+  padding: 12px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: center;
+}
+
+.dropdown-item:last-child {
+  border-bottom: none;
+}
+
+.dropdown-item:hover {
+  background: #1a6eb5;
+  color: white;
+}
+
+/* 动画时间调整 */
+.animate__fadeIn {
+  --animate-duration: 0.2s;
+}
+
+.animate__fadeOut {
+  --animate-duration: 0.15s;
 }
 </style> 
