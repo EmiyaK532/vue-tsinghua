@@ -5,6 +5,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import news1 from '@/assets/images/news/news1.jpg'
 import news2 from '@/assets/images/news/news2.jpg'
 import news3 from '@/assets/images/news/news3.jpg'
+import news4 from '@/assets/images/news/news4.jpg'
 
 interface NewsItem {
   id: number
@@ -30,6 +31,12 @@ const news = ref<NewsItem[]>([
     id: 3,
     title: "实验室获得国家自然科学基金重大项目支持",
     image: news3,
+    link: "#"
+  },
+  {
+    id: 4,
+    title: "实验室与德国柏林工业大学签署合作协议",
+    image: news4,
     link: "#"
   }
 ])

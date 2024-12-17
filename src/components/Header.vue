@@ -80,7 +80,7 @@ const switchLanguage = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 15rem;
+  gap: 8rem;
   height: 100%;
   /* 确保内容区域也有圆角，防止内容溢出 */
   border-bottom-right-radius: 20px;

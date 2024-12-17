@@ -26,35 +26,70 @@ const newsList = ref<News[]>([
     title: "实验室与德国柏林工业大学签署合作协议",
     date: "2024-03-05",
     category: "合作交流"
+  },
+  {
+    id: 4,
+    title: "实验室项目取得新进展",
+    date: "2024-03-07",
+    category: "科研进展"
   }
 ])
 </script>
 
 <template>
   <div class="news-list-container">
-    <div v-for="news in newsList" :key="news.id" class="news-item">
-      <span class="news-category">{{ news.category }}</span>
-      <h4 class="news-title">{{ news.title }}</h4>
-      <span class="news-date">{{ news.date }}</span>
+    <div class="news-list-wrapper">
+      <div v-for="news in newsList" :key="news.id" class="news-item">
+        <span class="news-category">{{ news.category }}</span>
+        <h4 class="news-title">{{ news.title }}</h4>
+        <span class="news-date">{{ news.date }}</span>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .news-list-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.news-list-wrapper {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.news-list-wrapper::-webkit-scrollbar {
+  width: 4px;
+}
+
+.news-list-wrapper::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 2px;
+}
+
+.news-list-wrapper::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 2px;
+}
+
+.news-list-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #bbb;
 }
 
 .news-item {
-  padding: 1rem;
+  padding: 0.8rem 1rem;
   border-bottom: 1px solid #eee;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease;
+  background: #fff;
 }
 
-.news-item:hover {
-  background-color: #f9f9f9;
+.news-item:last-child {
+  border-bottom: none;
 }
 
 .news-category {
@@ -71,10 +106,30 @@ const newsList = ref<News[]>([
   margin: 0.5rem 0;
   font-size: 1rem;
   color: #333;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.news-title:hover {
+  color: #1a6eb5;
 }
 
 .news-date {
   color: #888;
   font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .news-list-container {
+    height: 280px;
+  }
+
+  .news-item {
+    padding: 0.8rem;
+  }
+
+  .news-title {
+    font-size: 0.95rem;
+  }
 }
 </style> 
