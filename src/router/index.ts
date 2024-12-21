@@ -9,60 +9,67 @@ const router = createRouter({
       component: () => import("../views/Home.vue"),
     },
     {
-      path: "/about",
-      name: "About",
-      component: () => import("../views/about/About.vue"),
+      path: "/organization",
+      name: "Organization",
+      component: () => import("../views/organization/Organization.vue"),
       children: [
         {
-          path: "overview",
-          name: "Overview",
-          component: () => import("../views/about/Overview.vue"),
+          path: "experts",
+          name: "Experts",
+          component: () => import("../views/organization/Experts.vue"),
         },
         {
-          path: "director",
-          name: "Director",
-          component: () => import("../views/about/Director.vue"),
+          path: "academic",
+          name: "Academic",
+          component: () => import("../views/organization/Academic.vue"),
         },
         {
-          path: "history",
-          name: "History",
-          component: () => import("../views/about/History.vue"),
-        },
-        {
-          path: "research",
-          name: "Research",
-          component: () => import("../views/about/Research.vue"),
-        },
-        {
-          path: "leadership",
-          name: "Leadership",
-          component: () => import("../views/about/Leadership.vue"),
+          path: "institutes",
+          name: "Institutes",
+          component: () => import("../views/organization/Institutes.vue"),
         },
       ],
     },
     {
-      path: "/research",
-      name: "Research",
-      component: () => import("../views/research/Research.vue"),
+      path: "/faculty",
+      name: "Faculty",
+      component: () => import("../views/faculty/Faculty.vue"),
       children: [
         {
-          path: "directions",
-          name: "Directions",
-          component: () => import("../views/research/Directions.vue"),
+          path: "overview",
+          name: "FacultyOverview",
+          component: () => import("../views/faculty/Overview.vue"),
         },
         {
-          path: "achievements",
-          name: "Achievements",
-          component: () => import("../views/research/Achievements.vue"),
+          path: "teachers",
+          name: "Teachers",
+          component: () => import("../views/faculty/Teachers.vue"),
         },
         {
-          path: "awards",
-          name: "Awards",
-          component: () => import("../views/research/Awards.vue"),
+          path: "staff",
+          name: "Staff",
+          component: () => import("../views/faculty/Staff.vue"),
+        },
+        {
+          path: "visitors",
+          name: "Visitors",
+          component: () => import("../views/faculty/Visitors.vue"),
+        },
+        {
+          path: "retired",
+          name: "Retired",
+          component: () => import("../views/faculty/Retired.vue"),
         },
       ],
     },
+    // ... 继续添加其他路由
   ],
+});
+
+// 添加导航守卫进行调试
+router.beforeEach((to, from, next) => {
+  console.log("Navigating to:", to.path);
+  next();
 });
 
 export default router;

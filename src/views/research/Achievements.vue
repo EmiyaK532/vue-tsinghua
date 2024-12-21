@@ -1,35 +1,46 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import PageLayout from '@/components/layouts/PageLayout.vue'
+import ResearchAchievement from '@/components/research/ResearchAchievement.vue'
+import { useAchievements } from '@/composables/useAchievements'
+
+const activeTab = ref('papers')
+const { achievements, loading, error } = useAchievements()
+
+const tabs = [
+  { key: 'papers', label: '论文发表' },
+  { key: 'patents', label: '专利授权' },
+  { key: 'projects', label: '科研项目' }
+]
 </script>
 
 <template>
-  <div class="achievements-container">
-    <h1>科研成果</h1>
+  <PageLayout title="科研成果" :loading="loading" :error="error">
     <div class="achievements-tabs">
       <div class="tab-buttons">
-        <button class="active">论文发表</button>
-        <button>专利授权</button>
-        <button>科研项目</button>
+        <button 
+          v-for="tab in tabs" 
+          :key="tab.key"
+          :class="{ active: activeTab === tab.key }"
+          @click="activeTab = tab.key">
+          {{ tab.label }}
+        </button>
       </div>
-      <div class="tab-content">
-        <div class="achievement-list">
-          <div class="achievement-item" v-for="(item, index) in 5" :key="index">
-            <h3>成果标题</h3>
-            <p>成果描述...</p>
-            <div class="meta">
-              <span>发表时间：2023</span>
-              <span>作者：张三等</span>
-            </div>
-          </div>
-        </div>
+      
+      <div class="achievements-list">
+        <ResearchAchievement
+          v-for="achievement in achievements[activeTab]"
+          :key="achievement.id"
+          v-bind="achievement"
+        />
       </div>
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <style scoped>
-.achievements-container {
-  padding: 1rem;
+.achievements-tabs {
+  margin-top: 2rem;
 }
 
 .tab-buttons {
@@ -39,11 +50,12 @@ import { ref } from 'vue'
 }
 
 .tab-buttons button {
-  padding: 0.5rem 2rem;
+  padding: 0.8rem 2rem;
   border: none;
   background: #f5f5f5;
   border-radius: 4px;
   cursor: pointer;
+  transition: all 0.3s ease;
 }
 
 .tab-buttons button.active {
@@ -51,16 +63,9 @@ import { ref } from 'vue'
   color: white;
 }
 
-.achievement-item {
-  padding: 1.5rem;
-  border-bottom: 1px solid #eee;
-}
-
-.meta {
-  margin-top: 1rem;
-  color: #666;
-  font-size: 0.9rem;
+.achievements-list {
   display: flex;
-  gap: 2rem;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 </style> 

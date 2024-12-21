@@ -19,42 +19,7 @@ const { t } = useI18n()
     <div class="app-container">
       <Header class="floating-header" />
       
-      <div class="main-wrapper">
-        <!-- 轮播图区域 -->
-        <div class="carousel-section">
-          <NewsCarousel />
-        </div>
-        
-        <!-- 主要内容区域 -->
-        <div class="main-content">
-          <div class="content-wrapper">
-            <div class="content-grid">
-              <!-- 新闻动态 -->
-              <section class="news-section">
-                <h2>{{ t('news.title') }}</h2>
-                <NewsList />
-              </section>
-
-              <!-- 通知公告 -->
-              <section class="announcement-section">
-                <h2>{{ t('announcements.title') }}</h2>
-                <div class="announcement-list">
-                  <!-- 公告列表将在组件中实现 -->
-                </div>
-              </section>
-
-              <!-- 研究亮点 -->
-              <section class="highlights-section">
-                <h2>{{ t('research.highlights') }}</h2>
-                <div class="highlights-list">
-                  <!-- 研究亮点列表将在组件中实现 -->
-                </div>
-              </section>
-            </div>
-          </div>
-          <Sidebar />
-        </div>
-      </div>
+      <router-view></router-view>
     </div>
   </div>
 </template>

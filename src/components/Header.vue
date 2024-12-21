@@ -22,20 +22,31 @@ const navItems = [
       { title: '实验室概况', path: '/about/overview' },
       { title: '主任致词', path: '/about/director' },
       { title: '历史沿革', path: '/about/history' },
-      { title: '科研任务', path: '/about/research' },
+      { title: '研究方向', path: '/about/research' },
       { title: '现任领导', path: '/about/leadership' },
     ]
   },
   {
-    title: '科学研究',
-    path: '/research',
+    title: '机构设置',
+    path: '/organization',
     children: [
-      { title: '研究方向', path: '/research/directions' },
-      { title: '科研成果', path: '/research/achievements' },
-      { title: '获奖情况', path: '/research/awards' },
+      { title: '咨询专家委员会', path: '/organization/experts' },
+      { title: '学术委员会', path: '/organization/academic' },
+      { title: '研究所', path: '/organization/institutes' },
     ]
   },
-  // ... 其他菜单项
+  {
+    title: '师资队伍',
+    path: '/faculty',
+    children: [
+      { title: '师资概况', path: '/faculty/overview' },
+      { title: '在职教师', path: '/faculty/teachers' },
+      { title: '教辅人员', path: '/faculty/staff' },
+      { title: '访问学者', path: '/faculty/visitors' },
+      { title: '退休人员', path: '/faculty/retired' },
+    ]
+  },
+  // ... 继续添加其他导航项
 ]
 
 // 当前激活的下拉菜单和位置
