@@ -1,5 +1,6 @@
 <script setup lang="ts">
 // import { ref } from 'vue'
+import { SpeedInsights } from '@vercel/speed-insights/vue';
 import { useI18n } from 'vue-i18n'
 import Header from './components/Header.vue'
 import Sidebar from './components/Sidebar.vue'
@@ -12,6 +13,7 @@ const { t } = useI18n()
 </script>
 
 <template>
+  <SpeedInsights />
   <div class="app-wrapper">
     <div class="animated-bg left"></div>
     <div class="animated-bg right"></div>
