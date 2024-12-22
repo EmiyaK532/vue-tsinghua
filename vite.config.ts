@@ -15,4 +15,22 @@ export default defineConfig({
     open: true,
     historyApiFallback: true,
   },
+  optimizeDeps: {
+    include: [
+      "vue",
+      "vue-router",
+      "element-plus",
+      "nprogress",
+      "gsap",
+      "@vueuse/motion",
+      "vue-i18n",
+    ],
+    force: true,
+  },
+  build: {
+    commonjsOptions: {
+      include: [/node_modules/],
+    },
+    chunkSizeWarningLimit: 1500,
+  },
 });

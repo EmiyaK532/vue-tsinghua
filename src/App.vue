@@ -7,9 +7,37 @@ import Sidebar from './components/Sidebar.vue'
 import NewsCarousel from './components/NewsCarousel.vue'
 import NewsList from './components/NewsList.vue'
 import 'animate.css'
+import gsap from 'gsap'
 // import "./style.css"
 
 const { t } = useI18n()
+
+const beforeEnter = (el: Element) => {
+  gsap.set(el, {
+    opacity: 0,
+    transform: 'translateY(20px)'
+  })
+}
+
+const enter = (el: Element, done: () => void) => {
+  gsap.to(el, {
+    opacity: 1,
+    transform: 'translateY(0)',
+    duration: 0.5,
+    ease: 'power2.out',
+    onComplete: done
+  })
+}
+
+const leave = (el: Element, done: () => void) => {
+  gsap.to(el, {
+    opacity: 0,
+    transform: 'translateY(-20px)',
+    duration: 0.3,
+    ease: 'power2.in',
+    onComplete: done
+  })
+}
 </script>
 
 <template>
@@ -21,7 +49,15 @@ const { t } = useI18n()
     <div class="app-container">
       <Header class="floating-header" />
       
-      <router-view></router-view>
+      <router-view v-slot="{ Component }">
+        <transition
+          mode="out-in"
+          @before-enter="beforeEnter"
+          @enter="enter"
+          @leave="leave">
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </div>
   </div>
 </template>

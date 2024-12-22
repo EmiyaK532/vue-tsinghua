@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import NProgress from "nprogress";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -68,8 +69,13 @@ const router = createRouter({
 
 // 添加导航守卫进行调试
 router.beforeEach((to, from, next) => {
+  NProgress.start();
   console.log("Navigating to:", to.path);
   next();
+});
+
+router.afterEach(() => {
+  NProgress.done();
 });
 
 export default router;

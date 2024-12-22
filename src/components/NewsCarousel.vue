@@ -33,12 +33,12 @@ const news = ref<NewsItem[]>([
     image: news3,
     link: "#"
   },
-  {
-    id: 4,
-    title: "实验室与德国柏林工业大学签署合作协议",
-    image: news4,
-    link: "#"
-  }
+  // {
+  //   id: 4,
+  //   title: "实验室与德国柏林工业大学签署合作协议",
+  //   image: news4,
+  //   link: "#"
+  // }
 ])
 
 const currentIndex = ref(0)

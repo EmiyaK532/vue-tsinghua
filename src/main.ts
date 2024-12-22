@@ -6,6 +6,15 @@ import App from "./App.vue";
 import "animate.css";
 // import "./style.css";
 import router from "./router";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
+
+// 配置 NProgress
+NProgress.configure({
+  showSpinner: false,
+  easing: "ease",
+  speed: 500,
+});
 
 const app = createApp(App);
 
