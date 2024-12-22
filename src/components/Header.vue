@@ -1,10 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { useI18n } from 'vue-i18n'
 import 'animate.css'
 
 const { locale } = useI18n()
 const currentLang = ref(locale.value)
+const isMobileMenuOpen = ref(false)
+const isSmallScreen = ref(false)
+
+// 检测屏幕宽度
+const checkScreenSize = () => {
+  isSmallScreen.value = window.innerWidth < 1024
+}
+
+// 监听窗口大小变化
+onMounted(() => {
+  checkScreenSize()
+  window.addEventListener('resize', checkScreenSize)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenSize)
+})
 
 // 添加延时处理
 let hideTimeout: number | null = null
@@ -67,7 +84,7 @@ const showDropdown = (path: string, event: MouseEvent) => {
     path,
     rect: {
       top: rect.bottom,
-      left: rect.left,
+      left: rect.left - (160 - rect.width) / 2,
       width: rect.width
     }
   }
@@ -88,6 +105,24 @@ const cancelHide = () => {
     hideTimeout = null
   }
 }
+
+const switchLanguage = () => {
+  locale.value = locale.value === 'zh' ? 'en' : 'zh'
+  currentLang.value = locale.value
+}
+
+// 添加移动端展开菜单的状态管理
+const expandedMenus = ref<string[]>([])
+
+// 切换子菜单的展开状态
+const toggleSubmenu = (path: string) => {
+  const index = expandedMenus.value.indexOf(path)
+  if (index === -1) {
+    expandedMenus.value.push(path)
+  } else {
+    expandedMenus.value.splice(index, 1)
+  }
+}
 </script>
 
 <template>
@@ -95,21 +130,20 @@ const cancelHide = () => {
     <div class="header-content">
       <!-- Logo区域 -->
       <div class="logo-area">
-        <!-- <img src="../assets/logo/logo1.png" alt="实验室" /> -->
         <div class="title-wrapper">
           <h1 class="animate__animated animate__fadeIn">
-            <span class="animate__animated animate__slideInLeft">中国矿业大学</span>
+            <span class="animate__animated animate__slideInLeft">煤矿灾害防控</span>
             <span class="animate__animated animate__slideInRight">全国重点实验室</span>
           </h1>
           <p class="subtitle animate__animated animate__fadeIn animate__delay-1s">
-            NATIONAL KEY LABORATORY OF CHINA UNIVERSITY OF MINING AND TECHNOLOGY
+            <!-- NATIONAL KEY LABORATORY OF CHINA UNIVERSITY OF MINING AND TECHNOLOGY -->
           </p>
         </div>
       </div>
 
       <!-- 导航区域 -->
       <div class="nav-area">
-        <nav class="main-nav">
+        <nav class="main-nav" v-if="!isSmallScreen">
           <ul>
             <li v-for="item in navItems" 
                 :key="item.path"
@@ -124,26 +158,75 @@ const cancelHide = () => {
           </ul>
         </nav>
 
-        <div class="lang-switch">
+        <!-- 移动端菜单按钮 -->
+        <div v-else class="mobile-menu">
+          <button class="menu-toggle" @click="isMobileMenuOpen = !isMobileMenuOpen">
+            <span class="menu-icon"></span>
+          </button>
+        </div>
+
+        <!-- <div class="lang-switch">
           <button @click="switchLanguage">
             {{ currentLang === 'zh' ? 'EN' : '中文' }}
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
   </header>
 
-  <!-- 使用 Teleport 将下拉菜单移到 body 层级 -->
+  <!-- 移动端下拉菜单 -->
+  <Teleport to="body">
+    <transition
+      enter-active-class="animate__animated animate__fadeInDown"
+      leave-active-class="animate__animated animate__fadeOutUp">
+      <div v-if="isSmallScreen && isMobileMenuOpen" class="mobile-dropdown">
+        <nav class="mobile-nav">
+          <div v-for="item in navItems" 
+               :key="item.path"
+               class="mobile-nav-item">
+            <div class="mobile-nav-header">
+              <RouterLink :to="item.path" 
+                        class="mobile-nav-link"
+                        @click="isMobileMenuOpen = false">
+                {{ item.title }}
+              </RouterLink>
+              <button v-if="item.children" 
+                      class="expand-button"
+                      @click="toggleSubmenu(item.path)">
+                {{ expandedMenus.includes(item.path) ? '−' : '+' }}
+              </button>
+            </div>
+            <transition
+              enter-active-class="animate__animated animate__fadeInDown"
+              leave-active-class="animate__animated animate__fadeOutUp">
+              <div v-if="item.children && expandedMenus.includes(item.path)" 
+                   class="mobile-submenu">
+                <RouterLink v-for="child in item.children"
+                          :key="child.path"
+                          :to="child.path"
+                          class="mobile-submenu-item"
+                          active-class="mobile-submenu-item-active"
+                          @click="isMobileMenuOpen = false">
+                  {{ child.title }}
+                </RouterLink>
+              </div>
+            </transition>
+          </div>
+        </nav>
+      </div>
+    </transition>
+  </Teleport>
+
+  <!-- 桌面端下拉菜单 -->
   <Teleport to="body">
     <transition
       enter-active-class="animate__animated animate__fadeIn"
       leave-active-class="animate__animated animate__fadeOut">
-      <div v-if="activeDropdown && activeDropdown.rect"
+      <div v-if="!isSmallScreen && activeDropdown && activeDropdown.rect"
            class="global-dropdown"
            :style="{
              top: `${activeDropdown.rect.top}px`,
              left: `${activeDropdown.rect.left}px`,
-             width: `${activeDropdown.rect.width}px`,
            }"
            @mouseenter="cancelHide"
            @mouseleave="hideDropdown">
@@ -193,9 +276,7 @@ const cancelHide = () => {
   justify-content: space-between;
   gap: 8rem;
   height: 100%;
-  /* 确保内容区域也有圆角，防止内容溢出 */
-  border-bottom-right-radius: 20px;
-  overflow: hidden;
+  width: 100%;
 }
 
 .logo-area {
@@ -203,13 +284,6 @@ const cancelHide = () => {
   align-items: center;
   flex-shrink: 0;
   min-width: 300px;
-  height: 60px;
-}
-
-.logo-area img {
-  height: 100%;
-  width: auto;
-  object-fit: contain;
 }
 
 .nav-area {
@@ -218,14 +292,6 @@ const cancelHide = () => {
   gap: 3rem;
   justify-content: flex-end;
   flex: 1;
-  position: relative;
-  z-index: 2;
-}
-
-.main-nav {
-  display: flex;
-  align-items: center;
-  position: relative;
 }
 
 .main-nav ul {
@@ -236,225 +302,155 @@ const cancelHide = () => {
   padding: 0;
 }
 
-.main-nav a {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-  padding: 8px 15px;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.main-nav a:hover,
-.main-nav a.router-link-active {
-  color: #1a6eb5;
-}
-
-.lang-switch button {
-  padding: 0.4rem 1.2rem;
-  border: 1px solid #1a6eb5;
-  background: transparent;
-  color: #1a6eb5;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.9rem;
-  white-space: nowrap;
-}
-
-.lang-switch button:hover {
-  background: #1a6eb5;
-  color: white;
-}
-
-/* 响应式调整 */
-@media (max-width: 1400px) {
-  .header-content {
-    gap: 6rem;
-  }
-
-  .main-nav ul {
-    gap: 2.5rem;
-  }
-}
-
-@media (max-width: 1200px) {
-  .header-content {
-    gap: 4rem;
-  }
-
-  .main-nav ul {
-    gap: 2rem;
-  }
-
-  .logo-area {
-    min-width: 250px;
-  }
-}
-
-@media (max-width: 768px) {
-  .site-header {
-    height: auto;
-    padding: 0.8rem 0;
-    background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0.6) 0%,
-      rgba(255, 255, 255, 0.98) 30%
-    );
-    /* 移动端可以适当减小圆角 */
-    border-bottom-right-radius: 15px;
-  }
-
-  .header-content {
-    padding: 0 1rem;
-    flex-direction: column;
-    gap: 1rem;
-    border-bottom-right-radius: 15px;
-  }
-
-  .logo-area {
-    height: 50px;
-    min-width: 200px;
-  }
-
-  .nav-area {
-    flex-direction: column;
-    width: 100%;
-    gap: 1rem;
-  }
-
-  .main-nav {
-    width: 100%;
-  }
-
-  .main-nav ul {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 1rem;
-  }
-
-  .lang-switch {
-    margin-top: 0.5rem;
-  }
-
-  .site-header::after {
-    border-bottom-right-radius: 15px;
-  }
-}
-
-/* 底部边框渐变效果，需要考虑圆角 */
-.site-header::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.02) 0%,
-    rgba(0, 0, 0, 0.05) 50%,
-    rgba(0, 0, 0, 0.02) 100%
-  );
-  /* 保持与header相同的圆角 */
-  border-bottom-right-radius: 20px;
-}
-
-.title-wrapper {
-  margin-left: 1rem;
-}
-
-h1 {
-  font-size: 1.5rem;
-  color: #333;
-  margin: 0;
-  display: flex;
-  gap: 0.5rem;
-}
-
-.subtitle {
-  font-size: 0.8rem;
-  color: #666;
-  margin: 0.3rem 0 0 0;
-  opacity: 0.8;
-}
-
-/* 确保动画元素初始状态不可见 */
-.animate__slideInLeft {
-  --animate-duration: 1s;
-  animation-delay: 0.2s;
-}
-
-.animate__slideInRight {
-  --animate-duration: 1s;
-  animation-delay: 0.4s;
-}
-
-.animate__fadeIn {
-  --animate-duration: 0.2s;
-}
-
-.animate__fadeOut {
-  --animate-duration: 0.15s;
-}
-
-/* 响应式调整 */
-@media (max-width: 768px) {
-  .title-wrapper h1 {
-    font-size: 1.2rem;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-
-  .subtitle {
-    font-size: 0.7rem;
-  }
-}
-
 .nav-item {
   position: relative;
   padding: 20px 0;
 }
 
-.arrow {
-  display: inline-block;
-  font-size: 12px;
-  margin-left: 4px;
-  transition: transform 0.3s ease;
+/* 移动端菜单按钮样式 */
+.menu-toggle {
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
 }
 
-.nav-item:hover .arrow {
-  transform: rotate(180deg);
+.menu-icon {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #333;
+  position: relative;
 }
 
-/* 全局下拉菜单样式 */
+.menu-icon::before,
+.menu-icon::after {
+  content: '';
+  position: absolute;
+  width: 24px;
+  height: 2px;
+  background: #333;
+  left: 0;
+}
+
+.menu-icon::before {
+  top: -6px;
+}
+
+.menu-icon::after {
+  bottom: -6px;
+}
+
+/* 移动端下拉菜单样式 */
+.mobile-dropdown {
+  position: fixed;
+  top: 60px;
+  right: 0;
+  width: 280px;
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  border-bottom-left-radius: 8px;
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #eee;
+}
+
+.mobile-nav-link {
+  flex: 1;
+  display: block;
+  padding: 15px 20px;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.expand-button {
+  width: 48px;
+  height: 48px;
+  border: none;
+  background: none;
+  color: #666;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.expand-button:hover {
+  background: #f5f5f5;
+  color: #1a6eb5;
+}
+
+.mobile-submenu {
+  background: #f8f8f8;
+  overflow: hidden;
+}
+
+.mobile-submenu-item {
+  display: block;
+  padding: 12px 20px 12px 40px;
+  color: #666;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.mobile-submenu-item:hover,
+.mobile-submenu-item-active {
+  background: #f0f0f0;
+  color: #1a6eb5;
+}
+
+/* 添加hover效果 */
+.mobile-submenu-item:hover::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #1a6eb5;
+}
+
+/* 添加动画 */
+.mobile-submenu {
+  animation-duration: 0.3s !important;
+}
+
+/* 桌面端下拉菜单样式 */
 .global-dropdown {
   position: fixed;
-  z-index: 99999;
   background: white;
   border-radius: 4px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  border: 1px solid #e0e0e0;
-  overflow: hidden;
-  pointer-events: auto;  /* 确保可以接收鼠标事件 */
+  z-index: 1001;
+  min-width: 160px;
 }
 
 .dropdown-content {
   display: flex;
   flex-direction: column;
-  background: white;
+  width: 100%;
+  min-width: max-content;
 }
 
 .dropdown-item {
-  display: block;
   padding: 12px 20px;
   color: #333;
   text-decoration: none;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  font-size: 14px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid #eee;
   text-align: center;
+  white-space: nowrap;
+  min-width: 120px;
 }
 
 .dropdown-item:last-child {
@@ -466,12 +462,49 @@ h1 {
   color: white;
 }
 
-/* 动画时间调整 */
-.animate__fadeIn {
-  --animate-duration: 0.2s;
+/* 导航项样式 */
+.nav-item > a {
+  color: #333;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 8px 15px;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.animate__fadeOut {
-  --animate-duration: 0.15s;
+.nav-item > a:hover,
+.nav-item > a.router-link-active {
+  color: #1a6eb5;
+}
+
+/* 下拉箭头 */
+.arrow {
+  display: inline-block;
+  font-size: 12px;
+  margin-left: 4px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .arrow {
+  transform: rotate(180deg);
+}
+
+/* 响应式样式 */
+@media (max-width: 1024px) {
+  .header-content {
+    padding: 0 1rem;
+  }
+
+  .logo-area {
+    min-width: auto;
+  }
+
+  .title-wrapper h1 {
+    font-size: 1.2rem;
+  }
+
+  .subtitle {
+    font-size: 0.8rem;
+  }
 }
 </style> 
