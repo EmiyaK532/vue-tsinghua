@@ -13,6 +13,7 @@ const router = createRouter({
       path: "/organization",
       name: "Organization",
       component: () => import("../views/organization/Organization.vue"),
+      redirect: "/organization/experts",
       children: [
         {
           path: "experts",
@@ -35,6 +36,7 @@ const router = createRouter({
       path: "/faculty",
       name: "Faculty",
       component: () => import("../views/faculty/Faculty.vue"),
+      redirect: "/faculty/overview",
       children: [
         {
           path: "overview",
@@ -60,6 +62,39 @@ const router = createRouter({
           path: "retired",
           name: "Retired",
           component: () => import("../views/faculty/Retired.vue"),
+        },
+      ],
+    },
+    {
+      path: "/about",
+      name: "About",
+      component: () => import("../views/about/About.vue"),
+      redirect: "/about/overview",
+      children: [
+        {
+          path: "overview",
+          name: "Overview",
+          component: () => import("../views/about/Overview.vue"),
+        },
+        {
+          path: "director",
+          name: "Director",
+          component: () => import("../views/about/Director.vue"),
+        },
+        {
+          path: "history",
+          name: "History",
+          component: () => import("../views/about/History.vue"),
+        },
+        {
+          path: "research",
+          name: "AboutResearch",
+          component: () => import("../views/about/Research.vue"),
+        },
+        {
+          path: "leadership",
+          name: "Leadership",
+          component: () => import("../views/about/Leadership.vue"),
         },
       ],
     },
