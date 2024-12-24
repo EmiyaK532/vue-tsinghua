@@ -1,28 +1,32 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import PageLayout from '@/components/layouts/PageLayout.vue'
+import { aboutApi } from '@/api'
+import type { LabOverview } from '@/types/api'
 
-const labInfo = {
-  introduction: `煤矿灾害防控实验室成立于XXXX年，是国家重点实验室。实验室立足煤矿安全生产重大需求，
-                开展煤矿灾害防控基础理论与关键技术研究，为保障煤矿安全高效开采提供科技支撑。`,
-  research: [
-    '煤矿瓦斯灾害防控',
-    '矿井通风安全',
-    '粉尘防治',
-    '水害防治',
-    '地压与顶板控制'
-  ],
-  achievements: [
-    '获得国家科技进步奖XX项',
-    '发表高水平论文XXX篇',
-    '授权发明专利XXX项',
-    '制定国家标准XX项'
-  ]
+const loading = ref(true)
+const error = ref<string | null>(null)
+const labInfo = ref<LabOverview | null>(null)
+
+const fetchOverview = async () => {
+  try {
+    loading.value = true
+    const res = await aboutApi.getOverview()
+    labInfo.value = res.data
+  } catch (e) {
+    error.value = '获取实验室概况失败'
+    console.error(e)
+  } finally {
+    loading.value = false
+  }
 }
+
+onMounted(fetchOverview)
 </script>
 
 <template>
-  <PageLayout title="实验室概况">
-    <div class="overview-content">
+  <PageLayout title="实验室概况" :loading="loading" :error="error">
+    <div v-if="labInfo" class="overview-content">
       <section class="intro-section">
         <h2>实验室简介</h2>
         <p>{{ labInfo.introduction }}</p>
@@ -30,16 +34,43 @@ const labInfo = {
 
       <section class="research-section">
         <h2>主要研究方向</h2>
+        <div class="research-grid">
+          <div v-for="item in labInfo.research" 
+               :key="item.title"
+               class="research-item">
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section v-for="achievement in labInfo.achievements"
+               :key="achievement.title"
+               class="achievements-section">
+        <h2>{{ achievement.title }}</h2>
         <ul>
-          <li v-for="item in labInfo.research" :key="item">{{ item }}</li>
+          <li v-for="item in achievement.items" 
+              :key="item">
+            {{ item }}
+          </li>
         </ul>
       </section>
 
-      <section class="achievements-section">
-        <h2>主要成果</h2>
-        <ul>
-          <li v-for="item in labInfo.achievements" :key="item">{{ item }}</li>
-        </ul>
+      <section class="facilities-section">
+        <h2>实验设施</h2>
+        <div class="facilities-grid">
+          <div v-for="facility in labInfo.facilities"
+               :key="facility.name"
+               class="facility-item">
+            <h3>{{ facility.name }}</h3>
+            <ul>
+              <li v-for="equipment in facility.equipment"
+                  :key="equipment">
+                {{ equipment }}
+              </li>
+            </ul>
+          </div>
+        </div>
       </section>
     </div>
   </PageLayout>
@@ -90,5 +121,40 @@ li::before {
   position: absolute;
   left: 0;
   font-weight: bold;
+}
+
+.research-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.research-item {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+.research-item:hover {
+  transform: translateY(-5px);
+}
+
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.facility-item {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.facility-item ul {
+  margin-top: 0.5rem;
 }
 </style> 

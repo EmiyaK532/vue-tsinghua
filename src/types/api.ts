@@ -48,3 +48,51 @@ export interface Research {
   fundingSource?: string;
   abstract?: string;
 }
+
+// 实验室概况类型
+export interface LabOverview {
+  introduction: string;
+  research: ResearchDirection[];
+  achievements: Achievement[];
+  facilities: Facility[];
+}
+
+export interface ResearchDirection {
+  title: string;
+  description: string;
+}
+
+export interface Achievement {
+  title: string;
+  items: string[];
+}
+
+export interface Facility {
+  name: string;
+  equipment: string[];
+}
+
+// 主任类型
+export interface Director {
+  name: string;
+  title: string;
+  photo: string;
+  message: string;
+}
+
+// 历史事件类型
+export interface HistoryEvent {
+  year: number;
+  events: string[];
+}
+
+// 领导类型
+export interface Leader {
+  id: number;
+  name: string;
+  title: string;
+  position: string;
+  photo: string;
+  research: string[];
+  contact: string;
+}

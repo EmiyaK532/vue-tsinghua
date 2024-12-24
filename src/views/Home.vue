@@ -9,14 +9,12 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div class="main-wrapper">
-    <!-- 轮播图区域 -->
-    <div class="carousel-section">
+  <div class="home-container">
+    <div class="carousel-section no-gap">
       <NewsCarousel />
     </div>
     
-    <!-- 主要内容区域 -->
-    <div class="main-content">
+    <div class="content-section">
       <div class="content-wrapper">
         <div class="content-grid">
           <!-- 新闻动态 -->
@@ -48,26 +46,25 @@ const { t } = useI18n()
 </template>
 
 <style scoped>
-.main-wrapper {
-  padding-top: 60px;
-  position: relative;
-}
-
-.carousel-section {
-  position: relative;
+.home-container {
   width: 100%;
-  margin-bottom: 2rem;
 }
 
-.main-content {
-  position: relative;
-  display: flex;
-  margin: 0 auto;
+.carousel-section.no-gap {
+  margin-top: -60px; /* 抵消header的高度 */
+  width: 100%;
+}
+
+/* 确保轮播图容器宽度100% */
+.carousel-section.no-gap :deep(.el-carousel),
+.carousel-section.no-gap :deep(.el-carousel__container) {
+  width: 100%;
+}
+
+.content-section {
   max-width: 1200px;
-  padding: 0 20px;
-  gap: 20px;
-  width: 100%;
-  box-sizing: border-box;
+  margin: 2rem auto;
+  padding: 0 2rem;
 }
 
 .content-wrapper {

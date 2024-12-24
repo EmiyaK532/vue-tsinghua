@@ -8,6 +8,7 @@ import NewsCarousel from './components/NewsCarousel.vue'
 import NewsList from './components/NewsList.vue'
 import 'animate.css'
 import gsap from 'gsap'
+import Footer from './components/Footer.vue'
 // import "./style.css"
 
 const { t } = useI18n()
@@ -49,15 +50,20 @@ const leave = (el: Element, done: () => void) => {
     <div class="app-container">
       <Header class="floating-header" />
       
-      <router-view v-slot="{ Component }">
-        <transition
-          mode="out-in"
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @leave="leave">
-          <component :is="Component" />
-        </transition>
-      </router-view>
+      <main class="main-content">
+        <router-view v-slot="{ Component }">
+          <transition
+            name="page"
+            mode="out-in"
+            @before-enter="beforeEnter"
+            @enter="enter"
+            @leave="leave"
+          >
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </main>
+      <Footer />
     </div>
   </div>
 </template>
@@ -102,13 +108,21 @@ const leave = (el: Element, done: () => void) => {
 
 .main-content {
   position: relative;
-  display: flex;
-  margin: 0 auto;
-  max-width: 1200px;
-  padding: 0 20px;
-  gap: 20px;
+  flex: 1;
+  width: 100%;
+}
+
+/* 内容区域容器 */
+.main-content > * {
   width: 100%;
   box-sizing: border-box;
+}
+
+/* 非首页的内容才应用最大宽度和内边距 */
+.main-content > *:not(.home-container) {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .content-wrapper {
@@ -272,8 +286,9 @@ h2 {
 }
 
 .main-content {
-  margin-top: 60px; /* header的高度 */
   position: relative;
+  flex: 1;
+  width: 100%;
 }
 
 /* 轮播图层级控制 */
