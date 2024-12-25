@@ -56,7 +56,7 @@ const contactInfo = {
       </div>
     </div>
     <div class="copyright">
-      Copyright 2024 中国矿业大学煤炭灾害防控全国重点实验室
+      Copyright 2024 煤炭灾害防控全国重点实验室
     </div>
   </footer>
 </template>

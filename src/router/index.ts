@@ -100,6 +100,18 @@ const router = createRouter({
     },
     // ... 继续添加其他路由
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return {
+        ...savedPosition,
+        behavior: "smooth",
+      };
+    }
+    return {
+      top: 0,
+      behavior: "smooth",
+    };
+  },
 });
 
 // 添加导航守卫进行调试
