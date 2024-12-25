@@ -68,6 +68,7 @@ function getTagType(category: string) {
             </a>
           </div>
           <div class="news-content">
+            <!-- 左侧大图新闻 -->
             <div class="news-item main-news">
               <img :src="latestNews.image" :alt="latestNews.title">
               <div class="news-info">
@@ -75,12 +76,11 @@ function getTagType(category: string) {
                 <h3 class="title">{{ latestNews.title }}</h3>
               </div>
             </div>
+            <!-- 右侧新闻列表 -->
             <div class="news-list">
-              <div v-for="item in newsList" :key="item.id" class="news-item">
-                <div class="news-meta">
-                  <span class="date">{{ item.date }}</span>
-                </div>
-                <h3 class="title">{{ item.title }}</h3>
+              <div v-for="(item, index) in newsList.slice(0, 8)" :key="item.id" class="news-item">
+                <span class="date">{{ item.date }}</span>
+                <div class="title">{{ item.title }}</div>
                 <el-tag size="small" class="category-tag" :type="getTagType(item.category)">
                   {{ item.category }}
                 </el-tag>
@@ -137,85 +137,109 @@ function getTagType(category: string) {
 }
 
 .news-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 45% 55%;
+  gap: 2rem;
+  height: 300px;
 }
 
-.news-main {
+.main-news {
   position: relative;
   width: 100%;
-  height: 300px;
-  overflow: hidden;
+  height: 100%;
   border-radius: 4px;
+  overflow: hidden;
 }
 
-.news-main img {
+.main-news img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.news-main .news-info {
+.main-news .news-info {
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1.5rem;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  padding: 1.5rem 1rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8) 60%);
   color: white;
 }
 
-.news-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.news-item {
-  padding: 1rem;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.news-item:hover {
-  background-color: #f5f7fa;
-}
-
-.news-date {
+.main-news .date {
+  color: rgba(255, 255, 255, 0.9);
   font-size: 0.9rem;
-  color: #909399;
-  display: block;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
 }
 
-.news-title {
-  margin: 0 0 0.5rem;
-  font-size: 1rem;
-  color: #333;
-  line-height: 1.4;
+.main-news .title {
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  margin: 0;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.more-link {
-  color: #666;
-  text-decoration: none;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
+.news-list {
+  height: 100%;
+  overflow-y: auto;
+  padding-right: 1rem;
 }
 
-.more-link:hover {
+.news-list .news-item {
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.news-list .news-item:last-child {
+  border-bottom: none;
+}
+
+.date {
+  color: #666;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.3rem;
+}
+
+.title {
+  font-size: 1rem;
+  color: #333;
+  line-height: 1.4;
+  margin: 0.3rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.news-list .news-item:hover .title {
   color: #1a6eb5;
 }
 
-.news-section {
-  background: #fff;
-  padding: 20px;
+.category-tag {
+  font-size: 0.8rem;
+}
+
+.news-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.news-list::-webkit-scrollbar-thumb {
+  background-color: #dcdfe6;
+  border-radius: 2px;
+}
+
+.news-list::-webkit-scrollbar-track {
+  background-color: #f5f7fa;
 }
 
 .section-header {
@@ -258,8 +282,8 @@ function getTagType(category: string) {
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 1rem;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  padding: 1.5rem 1rem;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8) 60%);
   color: white;
 }
 
