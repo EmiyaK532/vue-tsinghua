@@ -132,21 +132,10 @@ const toggleSubmenu = (path: string) => {
       <div class="logo-area">
         <div class="logo-container">
           <img 
-            src="/images/logo.png" 
+            src="/images/logo1.png" 
             alt="实验室Logo" 
             class="logo animate__animated animate__fadeIn"
           />
-        </div>
-        <div class="title-wrapper">
-          <h1 class="animate__animated animate__fadeIn">
-            <div class="title-line">
-              <span class="animate__animated animate__slideInLeft">煤矿灾害防控</span>
-              <span class="animate__animated animate__slideInRight">全国重点实验室</span>
-            </div>
-          </h1>
-          <p class="subtitle animate__animated animate__fadeIn animate__delay-1s">
-            National Key Laboratory of Coal Mine Disaster Prevention and Control
-          </p>
         </div>
       </div>
 
@@ -523,8 +512,8 @@ const toggleSubmenu = (path: string) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 45px;
-  width: 45px;
+  height: 40px;
+  width: 350px;
   overflow: hidden;
   border-radius: 8px;
   background: white;
@@ -535,8 +524,8 @@ const toggleSubmenu = (path: string) => {
 
 /* Logo图片样式 */
 .logo {
-  height: 40px;
-  width: 40px;
+  height: 38px;
+  width: auto;
   object-fit: contain;
   transition: transform 0.3s ease;
 }
@@ -552,88 +541,26 @@ const toggleSubmenu = (path: string) => {
   transform: scale(1.05);
 }
 
-/* 标题样式优化 */
-.title-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.title-line {
-  display: flex;
-  gap: 0.5rem;
-  white-space: nowrap;
-}
-
-.title-wrapper h1 {
-  font-size: 1.3rem;
-  margin: 0;
-}
-
-.subtitle {
-  font-size: 0.75rem;
-  color: #666;
-  margin: 0;
-  white-space: nowrap;
-}
-
-/* 响应式样式优化 */
-@media (max-width: 1400px) {
-  .title-wrapper h1 {
-    font-size: 1.2rem;
-  }
-  
-  .subtitle {
-    font-size: 0.7rem;
-  }
-}
-
+/* 响应式调整 */
 @media (max-width: 1200px) {
-  .header-content {
-    gap: 2rem;
-  }
-
   .logo-container {
-    height: 40px;
-    width: 40px;
+    height: 35px;
+    width: 300px;
   }
 
   .logo {
-    height: 35px;
-    width: 35px;
-  }
-
-  .title-wrapper h1 {
-    font-size: 1.1rem;
-  }
-
-  .subtitle {
-    font-size: 0.65rem;
+    height: 32px;
   }
 }
 
 @media (max-width: 768px) {
-  .header-content {
-    padding: 0 1rem;
-    gap: 1rem;
-  }
-
   .logo-container {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 260px;
   }
 
   .logo {
-    height: 30px;
-    width: 30px;
-  }
-
-  .title-wrapper h1 {
-    font-size: 1rem;
-  }
-
-  .subtitle {
-    font-size: 0.6rem;
+    height: 28px;
   }
 }
 </style> 

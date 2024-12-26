@@ -178,7 +178,7 @@ onMounted(() => {
         <!-- 海报 -->
         <section class="poster-section">
           <div class="section-header">
-            <h2>海报</h2>
+            <h2>学术报告</h2>
             <a class="more-link" href="/posters">
               更多 <i class="el-icon-arrow-right"></i>
             </a>
