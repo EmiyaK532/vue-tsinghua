@@ -72,7 +72,7 @@ const leave = (el: Element, done: () => void) => {
 .app-wrapper {
   min-height: 100vh;
   background: #2d94d0;
-  padding: 0 60px 60px 60px;
+  padding: 0 60px 0 60px;
   position: relative;
   overflow: hidden;
   z-index: 0;
@@ -249,7 +249,7 @@ h2 {
 /* 响应式调整 */
 @media (max-width: 1400px) {
   .app-wrapper {
-    padding: 0 40px 40px 40px;
+    padding: 0 40px 0 40px;
   }
   .animated-bg {
     width: 40px;
@@ -258,7 +258,7 @@ h2 {
 
 @media (max-width: 1200px) {
   .app-wrapper {
-    padding: 0 30px 30px 30px;
+    padding: 0 30px 0 30px;
   }
   .animated-bg {
     width: 30px;
@@ -267,7 +267,7 @@ h2 {
 
 @media (max-width: 768px) {
   .app-wrapper {
-    padding: 0 15px 15px 15px;
+    padding: 0 15px 0 15px;
   }
   .animated-bg {
     width: 15px;
