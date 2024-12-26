@@ -5,7 +5,6 @@ import { ref } from 'vue'
 <template>
   <div class="about-container">
     <div class="sidebar">
-      <router-link to="/about/overview" class="sidebar-link">实验室概况</router-link>
       <router-link to="/about/director" class="sidebar-link">主任致词</router-link>
       <router-link to="/about/history" class="sidebar-link">历史沿革</router-link>
       <router-link to="/about/research" class="sidebar-link">科研任务</router-link>
@@ -22,17 +21,21 @@ import { ref } from 'vue'
   display: flex;
   min-height: calc(100vh - 60px);
   background: #f5f5f5;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .sidebar {
-  width: 240px;
+  width: 200px;
   background: white;
   padding: 2rem 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 60px;
+  top: 20px;
   height: calc(100vh - 60px);
 }
 
@@ -53,10 +56,10 @@ import { ref } from 'vue'
 
 .content {
   flex: 1;
-  padding: 2rem;
+  padding: 1.5rem;
   background: white;
-  margin: 1rem;
-  border-radius: 8px;
+  margin: 0;
+  border-radius: 0;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
   min-height: calc(100vh - 80px);
 }

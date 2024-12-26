@@ -3,11 +3,12 @@ import { ref } from 'vue'
 </script>
 
 <template>
-  <div class="organization-container">
+  <div class="education-container">
     <div class="sidebar">
-      <router-link to="/organization/experts" class="sidebar-link">咨询专家委员会</router-link>
-      <router-link to="/organization/academic" class="sidebar-link">学术委员会</router-link>
-      <router-link to="/organization/institutes" class="sidebar-link">研究所</router-link>
+      <router-link to="/education/overview" class="sidebar-link">概况</router-link>
+      <router-link to="/education/students" class="sidebar-link">在读研究生</router-link>
+      <router-link to="/education/international" class="sidebar-link">留学生</router-link>
+      <router-link to="/education/graduates" class="sidebar-link">毕业研究生</router-link>
     </div>
     <div class="content">
       <router-view></router-view>
@@ -16,7 +17,7 @@ import { ref } from 'vue'
 </template>
 
 <style scoped>
-.organization-container {
+.education-container {
   display: flex;
   min-height: calc(100vh - 60px);
   background: #f5f5f5;
@@ -34,7 +35,7 @@ import { ref } from 'vue'
   display: flex;
   flex-direction: column;
   position: sticky;
-  top:100px;
+  top: 100px;
   height: calc(100vh - 60px);
 }
 

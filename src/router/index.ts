@@ -69,13 +69,8 @@ const router = createRouter({
       path: "/about",
       name: "About",
       component: () => import("../views/about/About.vue"),
-      redirect: "/about/overview",
+      redirect: "/about/director",
       children: [
-        {
-          path: "overview",
-          name: "Overview",
-          component: () => import("../views/about/Overview.vue"),
-        },
         {
           path: "director",
           name: "Director",
@@ -98,7 +93,123 @@ const router = createRouter({
         },
       ],
     },
-    // ... 继续添加其他路由
+    {
+      path: "/research",
+      name: "Research",
+      component: () => import("../views/research/Research.vue"),
+      redirect: "/research/overview",
+      children: [
+        {
+          path: "overview",
+          name: "ResearchOverview",
+          component: () => import("../views/research/Overview.vue"),
+        },
+        {
+          path: "achievements",
+          name: "Achievements",
+          component: () => import("../views/research/Achievements.vue"),
+        },
+        {
+          path: "fund",
+          name: "OpenFund",
+          component: () => import("../views/research/Fund.vue"),
+        },
+        {
+          path: "projects",
+          name: "Projects",
+          component: () => import("../views/research/Projects.vue"),
+        },
+        {
+          path: "reports",
+          name: "Reports",
+          component: () => import("../views/research/Reports.vue"),
+        }
+      ]
+    },
+    {
+      path: "/journal",
+      name: "Journal",
+      component: () => import("../views/journal/Journal.vue"),
+    },
+    {
+      path: "/education",
+      name: "Education",
+      component: () => import("../views/education/Education.vue"),
+      redirect: "/education/overview",
+      children: [
+        {
+          path: "overview",
+          name: "EduOverview",
+          component: () => import("../views/education/Overview.vue"),
+        },
+        {
+          path: "students",
+          name: "Students",
+          component: () => import("../views/education/Students.vue"),
+        },
+        {
+          path: "international",
+          name: "International",
+          component: () => import("../views/education/International.vue"),
+        },
+        {
+          path: "graduates",
+          name: "Graduates",
+          component: () => import("../views/education/Graduates.vue"),
+        }
+      ]
+    },
+    {
+      path: "/cooperation",
+      name: "Cooperation",
+      component: () => import("../views/cooperation/Cooperation.vue"),
+      redirect: "/cooperation/overview",
+      children: [
+        {
+          path: "overview",
+          name: "CoopOverview",
+          component: () => import("../views/cooperation/Overview.vue"),
+        },
+        {
+          path: "academic",
+          name: "Academic",
+          component: () => import("../views/cooperation/Academic.vue"),
+        },
+        {
+          path: "projects",
+          name: "CoopProjects",
+          component: () => import("../views/cooperation/Projects.vue"),
+        },
+        {
+          path: "conferences",
+          name: "Conferences",
+          component: () => import("../views/cooperation/Conferences.vue"),
+        }
+      ]
+    },
+    {
+      path: "/platform",
+      name: "Platform",
+      component: () => import("../views/platform/Platform.vue"),
+      redirect: "/platform/equipment",
+      children: [
+        {
+          path: "equipment",
+          name: "Equipment",
+          component: () => import("../views/platform/Equipment.vue"),
+        },
+        {
+          path: "reservation",
+          name: "Reservation",
+          component: () => import("../views/platform/Reservation.vue"),
+        }
+      ]
+    },
+    {
+      path: "/contact",
+      name: "Contact",
+      component: () => import("../views/contact/Contact.vue"),
+    }
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

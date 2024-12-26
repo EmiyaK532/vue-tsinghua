@@ -110,6 +110,9 @@ const leave = (el: Element, done: () => void) => {
   position: relative;
   flex: 1;
   width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
 }
 
 /* 内容区域容器 */
@@ -120,9 +123,8 @@ const leave = (el: Element, done: () => void) => {
 
 /* 非首页的内容才应用最大宽度和内边距 */
 .main-content > *:not(.home-container) {
-  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0;
 }
 
 .content-wrapper {

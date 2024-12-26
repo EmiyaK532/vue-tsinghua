@@ -1,71 +1,80 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import PageLayout from '@/components/layouts/PageLayout.vue'
-import ResearchAchievement from '@/components/research/ResearchAchievement.vue'
-import { useAchievements } from '@/composables/useAchievements'
-
-const activeTab = ref('papers')
-const { achievements, loading, error } = useAchievements()
-
-const tabs = [
-  { key: 'papers', label: '论文发表' },
-  { key: 'patents', label: '专利授权' },
-  { key: 'projects', label: '科研项目' }
-]
 </script>
 
 <template>
-  <PageLayout title="科研成果" :loading="loading" :error="error">
-    <div class="achievements-tabs">
-      <div class="tab-buttons">
-        <button 
-          v-for="tab in tabs" 
-          :key="tab.key"
-          :class="{ active: activeTab === tab.key }"
-          @click="activeTab = tab.key">
-          {{ tab.label }}
-        </button>
-      </div>
-      
-      <div class="achievements-list">
-        <ResearchAchievement
-          v-for="achievement in achievements[activeTab]"
-          :key="achievement.id"
-          v-bind="achievement"
-        />
-      </div>
+  <div class="achievements">
+    <h2>研究成果</h2>
+    <div class="section">
+      <h3>成果概况</h3>
+      <!-- 成果概况内容 -->
     </div>
-  </PageLayout>
+    
+    <div class="section">
+      <h3>获奖情况</h3>
+      <table class="awards-table">
+        <thead>
+          <tr>
+            <th>类别</th>
+            <th>等级</th>
+            <th>成果名称</th>
+            <th>获奖人员</th>
+            <th>年度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 奖项数据 -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section">
+      <h3>编著、译著</h3>
+      <table class="books-table">
+        <thead>
+          <tr>
+            <th>序号</th>
+            <th>类型</th>
+            <th>名称</th>
+            <th>作者</th>
+            <th>出版社名称</th>
+            <th>年份</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 著作数据 -->
+        </tbody>
+      </table>
+    </div>
+  </div>
 </template>
 
 <style scoped>
-.achievements-tabs {
-  margin-top: 2rem;
+.achievements {
+  padding: 1rem;
 }
 
-.tab-buttons {
-  display: flex;
-  gap: 1rem;
+.section {
   margin-bottom: 2rem;
 }
 
-.tab-buttons button {
-  padding: 0.8rem 2rem;
-  border: none;
-  background: #f5f5f5;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
 }
 
-.tab-buttons button.active {
-  background: #1a6eb5;
-  color: white;
+th, td {
+  border: 1px solid #ddd;
+  padding: 0.8rem;
+  text-align: left;
 }
 
-.achievements-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+th {
+  background-color: #f5f5f5;
+}
+
+tr:nth-child(even) {
+  background-color: #fafafa;
 }
 </style> 

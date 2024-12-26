@@ -10,7 +10,9 @@ const isSmallScreen = ref(false)
 
 // 检测屏幕宽度
 const checkScreenSize = () => {
-  isSmallScreen.value = window.innerWidth < 1024
+  // 根据实际导航项计算所需最小宽度
+  const minWidth = 1400  // 根据实际导航项数量和宽度调整这个值
+  isSmallScreen.value = window.innerWidth < minWidth
 }
 
 // 监听窗口大小变化
@@ -36,10 +38,9 @@ const navItems = [
     title: '实验室简介',
     path: '/about',
     children: [
-      { title: '实验室概况', path: '/about/overview' },
       { title: '主任致词', path: '/about/director' },
       { title: '历史沿革', path: '/about/history' },
-      { title: '研究方向', path: '/about/research' },
+      { title: '科研任务', path: '/about/research' },
       { title: '现任领导', path: '/about/leadership' },
     ]
   },
@@ -63,7 +64,53 @@ const navItems = [
       { title: '退休人员', path: '/faculty/retired' },
     ]
   },
-  // ... 继续添加其他导航项
+  {
+    title: '科学研究',
+    path: '/research',
+    children: [
+      { title: '科研概况', path: '/research/overview' },
+      { title: '研究成果', path: '/research/achievements' },
+      { title: '开放基金', path: '/research/fund' },
+      { title: '自主研究课题', path: '/research/projects' },
+      { title: '年度科研简报', path: '/research/reports' },
+    ]
+  },
+  {
+    title: '学术期刊',
+    path: '/journal',
+  },
+  {
+    title: '人才培养',
+    path: '/education',
+    children: [
+      { title: '概况', path: '/education/overview' },
+      { title: '在读研究生', path: '/education/students' },
+      { title: '留学生', path: '/education/international' },
+      { title: '毕业研究生', path: '/education/graduates' },
+    ]
+  },
+  {
+    title: '合作交流',
+    path: '/cooperation',
+    children: [
+      { title: '交流概况', path: '/cooperation/overview' },
+      { title: '学术交流', path: '/cooperation/academic' },
+      { title: '合作项目', path: '/cooperation/projects' },
+      { title: '学术会议', path: '/cooperation/conferences' },
+    ]
+  },
+  {
+    title: '开放平台',
+    path: '/platform',
+    children: [
+      { title: '仪器设备', path: '/platform/equipment' },
+      { title: '开放预约', path: '/platform/reservation' },
+    ]
+  },
+  {
+    title: '联系我们',
+    path: '/contact',
+  }
 ]
 
 // 当前激活的下拉菜单和位置
@@ -84,7 +131,7 @@ const showDropdown = (path: string, event: MouseEvent) => {
     path,
     rect: {
       top: rect.bottom,
-      left: rect.left - (160 - rect.width) / 2,
+      left: rect.left + (rect.width / 2),
       width: rect.width
     }
   }
@@ -150,7 +197,8 @@ const toggleSubmenu = (path: string) => {
                 @mouseleave="hideDropdown">
               <RouterLink :to="item.path">
                 {{ item.title }}
-                <span v-if="item.children" class="arrow">▼</span>
+                <!-- 标记向下箭头 -->
+                <span v-if="item.children" class="arrow"></span>
               </RouterLink>
             </li>
           </ul>
@@ -263,18 +311,18 @@ const toggleSubmenu = (path: string) => {
   width: 100%;
   left: 0;
   top: 0;
+  overflow: hidden; /* 防止内容溢出 */
 }
 
 .header-content {
   max-width: 1800px;
+  width: 100%;
   margin: 0 auto;
-  padding: 0 2rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 4rem;
-  height: 100%;
-  width: 100%;
+  padding: 0 2rem;
+  flex-wrap: nowrap; /* 防止导航项换行 */
 }
 
 .logo-area {
@@ -344,14 +392,23 @@ const toggleSubmenu = (path: string) => {
 .mobile-dropdown {
   position: fixed;
   top: 60px;
+  left: 0;
   right: 0;
-  width: 280px;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 999;
   max-height: calc(100vh - 60px);
   overflow-y: auto;
-  background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
-  border-bottom-left-radius: 8px;
+}
+
+.mobile-nav {
+  padding: 1rem;
+  max-width: 100%;
+}
+
+.mobile-nav-item {
+  margin-bottom: 0.5rem;
+  width: 100%;
 }
 
 .mobile-nav-header {
@@ -429,17 +486,19 @@ const toggleSubmenu = (path: string) => {
 .global-dropdown {
   position: fixed;
   background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  z-index: 1001;
-  min-width: 160px;
+  z-index: 1000;
+  width: 180px;
+  transform: translateX(-50%);
+  overflow: hidden;
 }
 
 .dropdown-content {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   width: 100%;
-  min-width: max-content;
 }
 
 .dropdown-item {
@@ -449,7 +508,9 @@ const toggleSubmenu = (path: string) => {
   border-bottom: 1px solid #eee;
   text-align: center;
   white-space: nowrap;
-  min-width: 120px;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
 
 .dropdown-item:last-child {
@@ -459,6 +520,14 @@ const toggleSubmenu = (path: string) => {
 .dropdown-item:hover {
   background: #1a6eb5;
   color: white;
+  width: 100%;
+}
+
+/* 当下拉菜单项文字过长时的处理 */
+.dropdown-item {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* 导航项样式 */
@@ -477,7 +546,7 @@ const toggleSubmenu = (path: string) => {
 }
 
 /* 下拉箭头 */
-.arrow {
+/* .arrow {
   display: inline-block;
   font-size: 12px;
   margin-left: 4px;
@@ -486,7 +555,7 @@ const toggleSubmenu = (path: string) => {
 
 .nav-item:hover .arrow {
   transform: rotate(180deg);
-}
+} */
 
 /* 响应式样式 */
 @media (max-width: 1024px) {
@@ -561,6 +630,27 @@ const toggleSubmenu = (path: string) => {
 
   .logo {
     height: 28px;
+  }
+}
+
+/* 添加媒体查询 */
+@media (max-width: 1400px) { /* 根据实际导航项调整断点 */
+  .desktop-nav {
+    display: none;
+  }
+  
+  .mobile-menu-button {
+    display: block;
+  }
+}
+
+@media (min-width: 1401px) {
+  .mobile-menu-button {
+    display: none;
+  }
+  
+  .desktop-nav {
+    display: flex;
   }
 }
 </style> 
