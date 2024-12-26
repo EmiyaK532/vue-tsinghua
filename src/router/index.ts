@@ -130,6 +130,29 @@ const router = createRouter({
       path: "/journal",
       name: "Journal",
       component: () => import("../views/journal/Journal.vue"),
+      redirect: "/journal/introduction",
+      children: [
+        {
+          path: "introduction",
+          name: "JournalIntro",
+          component: () => import("../views/journal/Introduction.vue"),
+        },
+        {
+          path: "editors",
+          name: "JournalEditors",
+          component: () => import("../views/journal/Editors.vue"),
+        },
+        {
+          path: "submission",
+          name: "JournalSubmission",
+          component: () => import("../views/journal/Submission.vue"),
+        },
+        {
+          path: "papers",
+          name: "JournalPapers",
+          component: () => import("../views/journal/Papers.vue"),
+        }
+      ]
     },
     {
       path: "/education",

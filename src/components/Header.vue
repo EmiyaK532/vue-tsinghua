@@ -78,6 +78,12 @@ const navItems = [
   {
     title: '学术期刊',
     path: '/journal',
+    children: [
+      { title: 'FRICTION简介', path: '/journal/introduction' },
+      { title: 'FRICTION编委会', path: '/journal/editors' },
+      { title: '征稿启事', path: '/journal/submission' },
+      { title: '论文发表', path: '/journal/papers' },
+    ]
   },
   {
     title: '人才培养',

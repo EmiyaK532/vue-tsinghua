@@ -4,22 +4,63 @@ import { ref } from 'vue'
 
 <template>
   <div class="journal-container">
+    <div class="sidebar">
+      <router-link to="/journal/introduction" class="sidebar-link">FRICTION简介</router-link>
+      <router-link to="/journal/editors" class="sidebar-link">FRICTION编委会</router-link>
+      <router-link to="/journal/submission" class="sidebar-link">征稿启事</router-link>
+      <router-link to="/journal/papers" class="sidebar-link">论文发表</router-link>
+    </div>
     <div class="content">
-      <!-- 学术期刊内容 -->
+      <router-view></router-view>
     </div>
   </div>
 </template>
 
 <style scoped>
 .journal-container {
-  padding: 2rem;
-  background: #fff;
+  display: flex;
   min-height: calc(100vh - 60px);
-  margin-top: 60px;
+  background: #f5f5f5;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar {
+  width: 200px;
+  background: white;
+  padding: 2rem 0;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 100px;
+  height: calc(100vh - 60px);
+}
+
+.sidebar-link {
+  padding: 1rem 2rem;
+  color: #333;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-link:hover,
+.sidebar-link.router-link-active {
+  color: #1a6eb5;
+  background: #f0f7ff;
+  border-left-color: #1a6eb5;
 }
 
 .content {
-  max-width: 1200px;
-  margin: 0 auto;
+  flex: 1;
+  padding: 1.5rem;
+  background: white;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+  min-height: calc(100vh - 80px);
 }
 </style> 
