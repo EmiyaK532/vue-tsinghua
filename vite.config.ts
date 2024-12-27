@@ -47,5 +47,15 @@ export default defineConfig({
       include: [/node_modules/],
     },
     chunkSizeWarningLimit: 1500,
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        chunkFileNames: 'assets/js/[name]-[hash].js',
+        entryFileNames: 'assets/js/[name]-[hash].js',
+        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
+      }
+    }
   },
+  publicDir: 'public',
+  assetsInclude: ['**/*.jpg', '**/*.png', '**/*.gif', '**/*.svg', '**/*.ico'],
 });

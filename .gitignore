@@ -26,3 +26,8 @@ dist-ssr
 # Mock PDF files
 public/mock/pdfs/*.pdf
 !public/mock/pdfs/.gitkeep
+
+# 图片资源
+!src/assets/images/**/*.jpg
+!src/assets/images/**/*.png
+!src/assets/images/**/*.gif

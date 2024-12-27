@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import journalCover from '@/assets/images/journal/journal-cover.jpg'
 </script>
 
 <template>
