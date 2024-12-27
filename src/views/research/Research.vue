@@ -31,12 +31,12 @@ import { ref } from 'vue'
 .sidebar {
   width: 200px;
   background: white;
-  padding: 2rem 0;
+  padding: 2.3rem 0;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 100px;
+  top: 40px;
   height: calc(100vh - 60px);
 }
 

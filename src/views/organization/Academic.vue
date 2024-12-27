@@ -129,13 +129,12 @@ const academicData = ref<AcademicCommittee>({
 
 <style scoped>
 .academic-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  height: 100%;
+  width: 100%;
 }
 
 .page-header {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .page-header h2 {
@@ -159,7 +158,7 @@ const academicData = ref<AcademicCommittee>({
 .committee-section {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 2rem;
 }
 
 .member-group {
@@ -232,10 +231,6 @@ const academicData = ref<AcademicCommittee>({
 
 /* 响应式设计 */
 @media (max-width: 768px) {
-  .academic-container {
-    padding: 1rem;
-  }
-
   .members-grid {
     grid-template-columns: 1fr;
   }

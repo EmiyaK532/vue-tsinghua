@@ -19,12 +19,12 @@ import { ref } from 'vue'
 .organization-container {
   display: flex;
   min-height: calc(100vh - 60px);
-  margin-top: 60px;
   background: #f5f5f5;
   width: 100%;
   max-width: 100%;
-  margin: 60px 0 0 0;
+  margin: 0;
   padding: 0;
+  padding-top: 60px;
 }
 
 .sidebar {
@@ -35,7 +35,7 @@ import { ref } from 'vue'
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 100px;
+  top: auto;
   height: calc(100vh - 60px);
 }
 
@@ -68,7 +68,6 @@ import { ref } from 'vue'
 @media (max-width: 768px) {
   .organization-container {
     flex-direction: column;
-    margin-top: 50px;
   }
 
   .sidebar {

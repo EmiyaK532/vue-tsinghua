@@ -1,11 +1,44 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
-import { reportApi } from '@/api'
-import type { Report } from '@/types/api'
+import { ref, computed } from 'vue'
+// 暂时注释掉 API 相关导入
+// import { reportApi } from '@/api'
+// import type { Report } from '@/types/api'
 import { ElMessage } from 'element-plus'
 import { useMotion } from '@vueuse/motion'
 
-const reports = ref<Report[]>([])
+// 模拟 Report 类型
+interface Report {
+  id: number
+  title: string
+  fileName: string
+  uploadTime: string
+  fileSize: string
+}
+
+const reports = ref<Report[]>([
+  {
+    id: 1,
+    title: '2023年度煤炭灾害防控重点实验室科研工作简报',
+    fileName: '2023年度科研简报.pdf',
+    uploadTime: '2024.01.15',
+    fileSize: '2.5 MB'
+  },
+  {
+    id: 2,
+    title: '2022年度煤炭灾害防控重点实验室科研工作简报',
+    fileName: '2022年度科研简报.pdf',
+    uploadTime: '2023.01.20',
+    fileSize: '2.3 MB'
+  },
+  {
+    id: 3,
+    title: '2021年度煤炭灾害防控重点实验室科研工作简报',
+    fileName: '2021年度科研简报.pdf',
+    uploadTime: '2022.01.18',
+    fileSize: '2.1 MB'
+  }
+])
+
 const loading = ref(false)
 const searchQuery = ref('')
 
@@ -16,68 +49,9 @@ const filteredReports = computed(() => {
   )
 })
 
-// 获取报告列表
-const fetchReports = async () => {
-  loading.value = true
-  try {
-    const { data } = await reportApi.getReportList()
-    reports.value = data.map((report: Report) => ({
-      ...report,
-      uploadTime: new Date(report.uploadTime).toLocaleDateString('zh-CN'),
-      fileSize: formatFileSize(report.fileSize)
-    }))
-  } catch (error) {
-    ElMessage.error('获取报告列表失败')
-    console.error('Error fetching reports:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-// 格式化文件大小
-const formatFileSize = (bytes: number): string => {
-  if (bytes === 0) return '0 B'
-  const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
-
-// 下载报告
+// 下载报告（模拟）
 const downloadReport = async (report: Report) => {
-  try {
-    const id = report.id
-    const response = await reportApi.downloadReport(id.toString())
-    
-    // 检查响应类型
-    const contentType = response.headers['content-type']
-    if (contentType && contentType.includes('application/json')) {
-      // 如果返回的是 JSON，说明可能是错误信息
-      const reader = new FileReader()
-      const result = await new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result)
-        reader.onerror = reject
-        reader.readAsText(response.data)
-      })
-      const error = JSON.parse(result as string)
-      throw new Error(error.message || '下载失败')
-    }
-    
-    // 创建下载链接
-    const url = window.URL.createObjectURL(new Blob([response.data]))
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', report.fileName)
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
-    
-    ElMessage.success('下载成功')
-  } catch (error) {
-    ElMessage.error('下载失败')
-    console.error('Error downloading report:', error)
-  }
+  ElMessage.info('下载功能将在后端服务接入后启用')
 }
 
 // 动画引用
@@ -94,9 +68,7 @@ const { isSupported } = useMotion(listRef, {
   }
 })
 
-onMounted(() => {
-  fetchReports()
-})
+// 移除 onMounted 钩子，因为不需要初始加载数据
 </script>
 
 <template>

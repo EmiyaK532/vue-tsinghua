@@ -43,6 +43,9 @@ const experts = ref<Expert[]>([
 
 <style scoped>
 .experts-container {
+  /* padding: 2rem; */
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 2rem;
 }
 
