@@ -16,15 +16,15 @@ export default defineConfig({
         setupProdMockServer();
       `,
       prodMockData: () => {
-        const modules = import.meta.glob('./mock/**/*.ts')
-        return Object.values(modules).map(mod => mod())
+        const modules = import.meta.glob("./mock/**/*.ts");
+        return Object.values(modules).map((mod) => mod());
       },
     }),
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "~images": path.resolve(__dirname, "./src/assets/images")
+      "~images": path.resolve(__dirname, "./src/assets/images"),
     },
   },
   server: {
@@ -48,18 +48,5 @@ export default defineConfig({
       include: [/node_modules/],
     },
     chunkSizeWarningLimit: 1500,
-    assetsDir: 'assets',
-    rollupOptions: {
-      output: {
-        chunkFileNames: 'assets/js/[name]-[hash].js',
-        entryFileNames: 'assets/js/[name]-[hash].js',
-        assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
-      },
-      external: [
-        /\.(png|jpg|gif|svg|ico)$/
-      ]
-    }
   },
-  publicDir: 'public',
-  assetsInclude: ['**/*.jpg', '**/*.png', '**/*.gif', '**/*.svg', '**/*.ico'],
 });
