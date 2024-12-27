@@ -23,7 +23,8 @@
     /* Path aliases */
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "~images/*": ["src/assets/images/*"]
     },
     "types": ["node", "vue-router", "vite/client"]
   },

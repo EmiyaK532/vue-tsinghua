@@ -24,6 +24,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "~images": path.resolve(__dirname, "./src/assets/images")
     },
   },
   server: {
@@ -53,7 +54,10 @@ export default defineConfig({
         chunkFileNames: 'assets/js/[name]-[hash].js',
         entryFileNames: 'assets/js/[name]-[hash].js',
         assetFileNames: 'assets/[ext]/[name]-[hash].[ext]',
-      }
+      },
+      external: [
+        /\.(png|jpg|gif|svg|ico)$/
+      ]
     }
   },
   publicDir: 'public',
