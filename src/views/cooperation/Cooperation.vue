@@ -6,7 +6,7 @@ import { ref } from 'vue'
   <div class="cooperation-container">
     <div class="sidebar">
       <router-link to="/cooperation/overview" class="sidebar-link">交流概况</router-link>
-      <router-link to="/cooperation/academic" class="sidebar-link">学术交流</router-link>
+      <router-link :to="{ name: 'CooperationAcademic' }" class="sidebar-link">学术交流</router-link>
       <router-link to="/cooperation/projects" class="sidebar-link">合作项目</router-link>
       <router-link to="/cooperation/conferences" class="sidebar-link">学术会议</router-link>
     </div>

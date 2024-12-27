@@ -96,3 +96,37 @@ export interface Leader {
   research: string[];
   contact: string;
 }
+
+// 年度科研简报类型
+export interface Report {
+  id: number
+  title: string
+  fileName: string
+  fileUrl: string
+  uploadTime: string
+  fileSize: number
+}
+
+// 报告列表响应类型
+export interface ReportListResponse {
+  list: Report[]
+  total: number
+}
+
+// 学术委员会成员类型
+export interface AcademicMember {
+  id: number;
+  name: string;
+  title: string;
+  position: string;
+  organization: string;
+  degree?: string;
+}
+
+// 学术委员会数据结构
+export interface AcademicCommittee {
+  chairman: AcademicMember;
+  viceChairmen: AcademicMember[];
+  members: AcademicMember[];
+  secretary: AcademicMember;
+}

@@ -16,8 +16,12 @@ const service: AxiosInstance = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
     NProgress.start();
+    // 如果启用了 mock，添加随机延迟
+    if (import.meta.env.VITE_USE_MOCK === 'true') {
+      await new Promise(resolve => setTimeout(resolve, Math.random() * 1000));
+    }
     // 在这里可以添加token等认证信息
     // const token = localStorage.getItem('token')
     // if (token) {
@@ -35,6 +39,10 @@ service.interceptors.request.use(
 service.interceptors.response.use(
   (response: AxiosResponse) => {
     NProgress.done();
+    // 如果是下载文件，直接返回response
+    if (response.config.responseType === 'blob') {
+      return response;
+    }
     const res = response.data;
     // 这里可以根据后端的响应结构做相应的处理
     if (res.code !== 200) {
@@ -47,6 +55,22 @@ service.interceptors.response.use(
     NProgress.done();
     // 处理网络错误等情况
     console.error("请求错误:", error);
+    // 如果是下载文件时出错，尝试解析错误信息
+    if (error.response?.config?.responseType === 'blob') {
+      return new Promise((_, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const errorDetail = JSON.parse(reader.result as string);
+            reject(new Error(errorDetail.error || 'Download failed'));
+          } catch {
+            reject(new Error('Download failed'));
+          }
+        };
+        reader.onerror = () => reject(new Error('Download failed'));
+        reader.readAsText(error.response.data);
+      });
+    }
     return Promise.reject(error);
   }
 );

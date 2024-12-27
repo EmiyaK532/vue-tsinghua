@@ -9,6 +9,7 @@ import type {
   Director,
   HistoryEvent,
   Leader,
+  Report,
 } from "@/types/api";
 
 // 新闻相关接口
@@ -64,3 +65,19 @@ export const aboutApi = {
   // 获取现任领导
   getLeadership: () => request.get<ApiResponse<Leader[]>>("/about/leadership"),
 };
+
+// 报告相关接口
+export const reportApi = {
+  // 获取报告列表
+  getReportList: () => 
+    request.get<ApiResponse<Report[]>>('reports'),
+
+  // 下载报告
+  downloadReport: (id: string) =>
+    request.get(`reports/download/${id}`, {
+      responseType: 'blob',
+      validateStatus: (status) => {
+        return status >= 200 && status < 300
+      }
+    })
+}

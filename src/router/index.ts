@@ -22,8 +22,11 @@ const router = createRouter({
         },
         {
           path: "academic",
-          name: "Academic",
+          name: "OrganizationAcademic",
           component: () => import("../views/organization/Academic.vue"),
+          meta: {
+            title: '学术委员会'
+          }
         },
         {
           path: "institutes",
@@ -195,7 +198,7 @@ const router = createRouter({
         },
         {
           path: "academic",
-          name: "Academic",
+          name: "CooperationAcademic",
           component: () => import("../views/cooperation/Academic.vue"),
         },
         {
@@ -251,7 +254,11 @@ const router = createRouter({
 // 添加导航守卫进行调试
 router.beforeEach((to, from, next) => {
   NProgress.start();
-  console.log("Navigating to:", to.path);
+  console.log("Navigation details:", {
+    to: to.path,
+    from: from.path,
+    matched: to.matched.map(r => r.path)
+  });
   next();
 });
 
