@@ -33,7 +33,7 @@ import { ref } from 'vue'
   display: flex;
   flex-direction: column;
   position: sticky;
-  top: 100px;
+  top: auto;
   height: calc(100vh - 60px);
 }
 
