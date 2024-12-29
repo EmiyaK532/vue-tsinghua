@@ -114,9 +114,9 @@ onMounted(() => {
         <section class="news-section animate-section">
           <div class="section-header">
             <h2>新闻动态</h2>
-            <a class="more-link" href="/news">
+            <router-link class="more-link" to="/news">
               更多 <i class="el-icon-arrow-right"></i>
-            </a>
+            </router-link>
           </div>
           <div class="news-content">
             <!-- 左侧大图新闻 -->
@@ -144,9 +144,9 @@ onMounted(() => {
         <section class="announcement-section animate-section">
           <div class="section-header">
             <h2>通知公告</h2>
-            <a class="more-link" href="/announcements">
+            <router-link class="more-link" to="/announcements">
               更多 <i class="el-icon-arrow-right"></i>
-            </a>
+            </router-link>
           </div>
           <div class="announcement-list">
             <AnnouncementList />

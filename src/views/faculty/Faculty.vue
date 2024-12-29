@@ -34,6 +34,6 @@ import FacultySidebar from '@/components/sidebars/FacultySidebar.vue'
 }
 
 .sidebar {
-  top: 64px;
+  top: auto;
 }
 </style> 

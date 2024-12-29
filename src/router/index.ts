@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import NProgress from "nprogress";
+import NewsList from "@/views/news/NewsList.vue";
+import NoticeList from "@/views/notice/NoticeList.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,8 +27,8 @@ const router = createRouter({
           name: "OrganizationAcademic",
           component: () => import("../views/organization/Academic.vue"),
           meta: {
-            title: '学术委员会'
-          }
+            title: "学术委员会",
+          },
         },
         {
           path: "institutes",
@@ -126,8 +128,8 @@ const router = createRouter({
           path: "reports",
           name: "Reports",
           component: () => import("../views/research/Reports.vue"),
-        }
-      ]
+        },
+      ],
     },
     {
       path: "/journal",
@@ -154,8 +156,8 @@ const router = createRouter({
           path: "papers",
           name: "JournalPapers",
           component: () => import("../views/journal/Papers.vue"),
-        }
-      ]
+        },
+      ],
     },
     {
       path: "/education",
@@ -182,8 +184,8 @@ const router = createRouter({
           path: "graduates",
           name: "Graduates",
           component: () => import("../views/education/Graduates.vue"),
-        }
-      ]
+        },
+      ],
     },
     {
       path: "/cooperation",
@@ -210,8 +212,8 @@ const router = createRouter({
           path: "conferences",
           name: "Conferences",
           component: () => import("../views/cooperation/Conferences.vue"),
-        }
-      ]
+        },
+      ],
     },
     {
       path: "/platform",
@@ -228,14 +230,30 @@ const router = createRouter({
           path: "reservation",
           name: "Reservation",
           component: () => import("../views/platform/Reservation.vue"),
-        }
-      ]
+        },
+      ],
     },
     {
       path: "/contact",
       name: "Contact",
       component: () => import("../views/contact/Contact.vue"),
-    }
+    },
+    {
+      path: "/news",
+      name: "news",
+      component: NewsList,
+      meta: {
+        title: "新闻动态",
+      },
+    },
+    {
+      path: "/announcements",
+      name: "announcements",
+      component: NoticeList,
+      meta: {
+        title: "通知公告",
+      },
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {
@@ -257,7 +275,7 @@ router.beforeEach((to, from, next) => {
   console.log("Navigation details:", {
     to: to.path,
     from: from.path,
-    matched: to.matched.map(r => r.path)
+    matched: to.matched.map((r) => r.path),
   });
   next();
 });

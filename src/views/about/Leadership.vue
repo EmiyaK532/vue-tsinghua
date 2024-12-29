@@ -1,17 +1,40 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+
+// 定义领导数据数组
+const leaders = ref([
+  {
+    name: '蒂法',
+    position: '教授',
+    research: '人工智能',
+    imageUrl: 'http://120.26.90.87:9091/images/01.jpg' // 替换成实际的远程图片URL
+  },
+  // ... 其他领导数据
+])
+
+// 处理图片加载错误
+const handleImageError = (event: Event) => {
+  const img = event.target as HTMLImageElement
+  img.src = '/default-avatar.jpg' // 替换成你的默认图片路径
+}
 </script>
 
 <template>
   <div class="leadership-container">
     <h1>现任领导</h1>
     <div class="leaders-grid">
-      <div class="leader-card" v-for="(leader, index) in 6" :key="index">
-        <div class="photo"></div>
+      <div class="leader-card" v-for="(leader, index) in leaders" :key="index">
+        <div class="photo">
+          <img 
+            :src="leader.imageUrl"
+            @error="handleImageError"
+            alt="领导照片"
+          />
+        </div>
         <div class="info">
-          <h3>领导姓名</h3>
-          <p>职位</p>
-          <p>研究方向</p>
+          <h3>{{ leader.name }}</h3>
+          <p>{{ leader.position }}</p>
+          <p>{{ leader.research }}</p>
         </div>
       </div>
     </div>
@@ -54,5 +77,11 @@ import { ref } from 'vue'
 .info p {
   margin: 0.5rem 0;
   color: #666;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style> 

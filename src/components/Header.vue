@@ -349,7 +349,7 @@ const toggleSubmenu = (path: string) => {
 
 .main-nav ul {
   display: flex;
-  gap: 3rem;
+  gap: 0.5rem;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -357,7 +357,7 @@ const toggleSubmenu = (path: string) => {
 
 .nav-item {
   position: relative;
-  padding: 20px 0;
+  padding: 5px 0;
 }
 
 /* 移动端菜单按钮样式 */

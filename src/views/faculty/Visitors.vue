@@ -1,43 +1,54 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { scholarApi } from '@/api'
+import type { Scholar } from '@/types/api'
 import PageLayout from '@/components/layouts/PageLayout.vue'
 
-interface Visitor {
-  id: number
-  name: string
-  englishName: string
-  organization: string
-  country: string
-  period: string
-  research: string
+const scholars = ref<Scholar[]>([])
+const loading = ref(false)
+const error = ref('')
+
+const fetchScholars = async () => {
+  loading.value = true
+  try {
+    const res = await scholarApi.getScholars()
+    scholars.value = res.data.data
+  } catch (err) {
+    console.error('获取访问学者列表失败:', err)
+    error.value = '获取访问学者列表失败'
+    ElMessage.error('获取访问学者列表失败')
+  } finally {
+    loading.value = false
+  }
 }
 
-const visitors = ref<Visitor[]>([
-  {
-    id: 1,
-    name: 'John Smith',
-    englishName: 'John Smith',
-    organization: 'MIT',
-    country: '美国',
-    period: '2023.09 - 2024.03',
-    research: '智能采矿技术'
-  },
-  // ... 添加更多访问学者数据
-])
+onMounted(() => {
+  fetchScholars()
+})
 </script>
 
 <template>
   <PageLayout title="访问学者">
-    <div class="visitors-list">
-      <div v-for="visitor in visitors" 
-           :key="visitor.id"
+    <div v-if="loading" class="loading">加载中...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else class="visitors-list">
+      <div v-for="scholar in scholars" 
+           :key="scholar.id"
            class="visitor-card">
         <div class="visitor-info">
-          <h3>{{ visitor.name }} ({{ visitor.englishName }})</h3>
-          <p class="organization">{{ visitor.organization }}</p>
-          <p class="country">{{ visitor.country }}</p>
-          <p class="period">访问期间：{{ visitor.period }}</p>
-          <p class="research">研究方向：{{ visitor.research }}</p>
+          <h3>{{ scholar.name }}</h3>
+          <p class="organization">{{ scholar.affiliation }}</p>
+          <div class="meta-info">
+            <span class="country">
+              <el-icon><Location /></el-icon>
+              {{ scholar.country }}
+            </span>
+            <span class="time">
+              <el-icon><Calendar /></el-icon>
+              {{ scholar.time }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -46,8 +57,8 @@ const visitors = ref<Visitor[]>([
 
 <style scoped>
 .visitors-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1.5rem;
 }
 
@@ -56,15 +67,61 @@ const visitors = ref<Visitor[]>([
   padding: 1.5rem;
   border-radius: 8px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.visitor-card:hover {
+  transform: translateY(-5px);
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
 }
 
 .organization {
   color: #1a6eb5;
   margin: 0.5rem 0;
+  font-size: 0.95rem;
 }
 
-.country, .period, .research {
+.meta-info {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 1rem;
   color: #666;
-  margin: 0.3rem 0;
+  font-size: 0.9rem;
+}
+
+.country, .time {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error {
+  color: #ff4d4f;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .visitor-card {
+    background: #1a1a1a;
+  }
+
+  h3 {
+    color: #e0e0e0;
+  }
+
+  .meta-info {
+    color: #b8c2cc;
+  }
 }
 </style> 

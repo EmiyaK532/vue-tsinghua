@@ -1,58 +1,55 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { retireeApi } from '@/api'
+import type { Retiree } from '@/types/api'
 import PageLayout from '@/components/layouts/PageLayout.vue'
-import PersonCard from '@/components/cards/PersonCard.vue'
 
-interface RetiredStaff {
-  id: number
-  name: string
-  title: string
-  retireYear: number
-  formerPosition: string
-  achievements: string[]
-  photo?: string
+const retirees = ref<Retiree[]>([])
+const loading = ref(false)
+const error = ref('')
+
+const fetchRetirees = async () => {
+  loading.value = true
+  try {
+    const res = await retireeApi.getRetirees()
+    retirees.value = res.data.data
+  } catch (err) {
+    console.error('获取退休人员列表失败:', err)
+    error.value = '获取退休人员列表失败'
+    ElMessage.error('获取退休人员列表失败')
+  } finally {
+    loading.value = false
+  }
 }
 
-const retiredStaff = ref<RetiredStaff[]>([
-  {
-    id: 1,
-    name: '李教授',
-    title: '教授（退休）',
-    retireYear: 2020,
-    formerPosition: '实验室主任',
-    achievements: [
-      '国家科技进步二等奖',
-      '长江学者特聘教授',
-      '国家杰出青年科学基金获得者'
-    ]
-  },
-  // ... 添加更多退休人员数据
-])
+onMounted(() => {
+  fetchRetirees()
+})
 </script>
 
 <template>
   <PageLayout title="退休人员">
-    <div class="retired-grid">
-      <div v-for="staff in retiredStaff" 
-           :key="staff.id"
+    <div v-if="loading" class="loading">加载中...</div>
+    <div v-else-if="error" class="error">{{ error }}</div>
+    <div v-else class="retired-grid">
+      <div v-for="retiree in retirees" 
+           :key="retiree.id"
            class="retired-card">
-        <div class="photo">
-          <img v-if="staff.photo" :src="staff.photo" :alt="staff.name">
-          <div v-else class="photo-placeholder"></div>
-        </div>
         <div class="info">
-          <h3>{{ staff.name }}</h3>
-          <p class="title">{{ staff.title }}</p>
-          <p class="position">原任职：{{ staff.formerPosition }}</p>
-          <p class="retire-year">退休年份：{{ staff.retireYear }}</p>
-          <div class="achievements">
-            <h4>主要成就：</h4>
-            <ul>
-              <li v-for="achievement in staff.achievements" 
-                  :key="achievement">
-                {{ achievement }}
-              </li>
-            </ul>
+          <div class="header">
+            <h3>{{ retiree.name }}</h3>
+            <span class="position">{{ retiree.position }}</span>
+          </div>
+          <div class="meta">
+            <span class="time">
+              <el-icon><Timer /></el-icon>
+              退休时间：{{ retiree.time }}
+            </span>
+          </div>
+          <div class="achievement">
+            <h4>主要成就</h4>
+            <p>{{ retiree.achievement }}</p>
           </div>
         </div>
       </div>
@@ -80,58 +77,83 @@ const retiredStaff = ref<RetiredStaff[]>([
   transform: translateY(-5px);
 }
 
-.photo, .photo-placeholder {
-  height: 200px;
-  background: #f5f5f5;
-  overflow: hidden;
-}
-
-.photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 .info {
   padding: 1.5rem;
 }
 
-.title {
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #2c3e50;
+}
+
+.position {
   color: #1a6eb5;
-  font-weight: bold;
-  margin: 0.5rem 0;
+  font-size: 0.9rem;
 }
 
-.position, .retire-year {
+.meta {
+  margin: 1rem 0;
+}
+
+.time {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
   color: #666;
-  margin: 0.3rem 0;
+  font-size: 0.9rem;
 }
 
-.achievements {
-  margin-top: 1rem;
+.achievement {
+  margin-top: 1.5rem;
 }
 
-.achievements h4 {
+.achievement h4 {
   color: #333;
   margin-bottom: 0.5rem;
+  font-size: 1rem;
 }
 
-.achievements ul {
-  list-style: none;
-  padding-left: 0;
-}
-
-.achievements li {
+.achievement p {
   color: #666;
-  margin: 0.3rem 0;
-  padding-left: 1rem;
-  position: relative;
+  line-height: 1.6;
+  margin: 0;
 }
 
-.achievements li::before {
-  content: '•';
-  position: absolute;
-  left: 0;
-  color: #1a6eb5;
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+}
+
+.error {
+  color: #ff4d4f;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .retired-card {
+    background: #1a1a1a;
+  }
+
+  h3 {
+    color: #e0e0e0;
+  }
+
+  .achievement h4 {
+    color: #e0e0e0;
+  }
+
+  .achievement p,
+  .time {
+    color: #b8c2cc;
+  }
 }
 </style> 

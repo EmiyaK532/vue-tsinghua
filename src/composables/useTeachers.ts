@@ -1,41 +1,36 @@
 import { ref, onMounted } from "vue";
+import { ElMessage } from "element-plus";
 import { teacherApi } from "@/api";
 import type { Teacher } from "@/types/api";
 
-export function useTeachers() {
+export function useTeachers(type: number = 1) {
   const teachers = ref<Teacher[]>([]);
-  const loading = ref(true);
-  const error = ref<string | null>(null);
-  const currentPage = ref(1);
-  const pageSize = ref(10);
-  const total = ref(0);
+  const loading = ref(false);
+  const error = ref("");
 
   const fetchTeachers = async () => {
+    loading.value = true;
+    error.value = "";
     try {
-      loading.value = true;
-      const res = await teacherApi.getTeacherList({
-        page: currentPage.value,
-        pageSize: pageSize.value,
-      });
-      teachers.value = res.data.list;
-      total.value = res.data.total;
-    } catch (e) {
-      error.value = "获取教师数据失败";
-      console.error(e);
+      const res = await teacherApi.getTeacherList(type);
+      teachers.value = res.data.data;
+    } catch (err) {
+      console.error("获取教师列表失败:", err);
+      error.value = "获取教师列表失败";
+      ElMessage.error("获取教师列表失败");
     } finally {
       loading.value = false;
     }
   };
 
-  onMounted(fetchTeachers);
+  onMounted(() => {
+    fetchTeachers();
+  });
 
   return {
     teachers,
     loading,
     error,
-    currentPage,
-    pageSize,
-    total,
     fetchTeachers,
   };
 }

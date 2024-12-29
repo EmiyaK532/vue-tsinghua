@@ -1,46 +1,63 @@
 <template>
-  <div class="announcement-list">
-    <div v-for="item in announcements" :key="item.id" class="announcement-item">
-      <span class="announcement-date">{{ item.date }}</span>
-      <p class="announcement-title">{{ item.title }}</p>
+  <div class="announcement-wrapper">
+    <div class="announcement-list">
+      <div v-for="item in announcements" :key="item.id" class="announcement-item">
+        <span class="announcement-date">{{ item.time }}</span>
+        <p class="announcement-title">{{ item.title }}</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { ElMessage } from 'element-plus'
+import { noticeApi } from '@/api'
+import type { NoticeItem } from '@/types/api'
 
-const announcements = ref([
-  {
-    id: 1,
-    title: '2024年度清华大学高端装备界面科学与技术全国重点实验室开放基金项目申报指南',
-    date: '2024.06.12'
-  },
-  {
-    id: 2,
-    title: 'Detailed Rules for the "Wen Shizhu Maple Leaf Award - International Young Scholar"',
-    date: '2024.04.08'
-  },
-  {
-    id: 3,
-    title: '2024年度"温诗铸枫叶奖 - 优秀青年学者奖"征集候选人公告',
-    date: '2024.04.08'
+const announcements = ref<NoticeItem[]>([])
+const loading = ref(false)
+
+const fetchAnnouncements = async () => {
+  loading.value = true
+  try {
+    const res = await noticeApi.getLatelyNotice()
+    announcements.value = res.data.data
+  } catch (error) {
+    console.error('获取通知列表出错:', error)
+    ElMessage.error('获取通知列表出错')
+  } finally {
+    loading.value = false
   }
-])
+}
+
+onMounted(() => {
+  fetchAnnouncements()
+})
 </script>
 
 <style scoped>
+.announcement-wrapper {
+  position: relative;
+  padding-right: 4px;
+  /* 设置固定高度，确保只显示三条数据 */
+  height: 300px; /* 每条数据约60px，三条数据就是180px */
+}
+
 .announcement-list {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-height: 600px;
+  height: 100%;
   overflow-y: auto;
+  margin-right: -4px;
 }
 
 .announcement-item {
   cursor: pointer;
   padding: 0.5rem 0;
+  /* 设置最小高度，确保每条数据的高度一致 */
+  min-height: 48px;
 }
 
 .announcement-item:hover .announcement-title {
@@ -63,16 +80,23 @@ const announcements = ref([
 }
 
 /* 滚动条样式 */
-::-webkit-scrollbar {
+.announcement-list::-webkit-scrollbar {
   width: 4px;
 }
 
-::-webkit-scrollbar-thumb {
+.announcement-list::-webkit-scrollbar-thumb {
   background-color: #dcdfe6;
   border-radius: 2px;
 }
 
-::-webkit-scrollbar-track {
+.announcement-list::-webkit-scrollbar-track {
   background-color: #f5f7fa;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  .announcement-title {
+    color: #e0e0e0;
+  }
 }
 </style> 
