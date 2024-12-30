@@ -86,13 +86,20 @@ export const reportApi = {
   getReportList: () => request.get<ApiResponse<Report[]>>("reports"),
 
   // 下载报告
-  downloadReport: (id: string) =>
-    request.get(`reports/download/${id}`, {
-      responseType: "blob",
-      validateStatus: (status) => {
-        return status >= 200 && status < 300;
-      },
-    }),
+  downloadReport: async (fileName: string) => {
+    const response = await fetch(
+      `https://120.26.90.87:9091/files/${fileName}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "*/*",
+        },
+      }
+    );
+
+    if (!response.ok) throw new Error("Download failed");
+    return response.blob();
+  },
 };
 
 // 通知公告相关接口

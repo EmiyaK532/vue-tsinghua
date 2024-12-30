@@ -1,25 +1,15 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-// 暂时注释掉 API 相关导入
-// import { reportApi } from '@/api'
-// import type { Report } from '@/types/api'
+import { reportApi } from '@/api'
+import type { Report } from '@/types/api'
 import { ElMessage } from 'element-plus'
 import { useMotion } from '@vueuse/motion'
-
-// 模拟 Report 类型
-interface Report {
-  id: number
-  title: string
-  fileName: string
-  uploadTime: string
-  fileSize: string
-}
 
 const reports = ref<Report[]>([
   {
     id: 1,
     title: '2023年度煤炭灾害防控重点实验室科研工作简报',
-    fileName: '2023年度科研简报.pdf',
+    fileName: 'test.docx',
     uploadTime: '2024.01.15',
     fileSize: '2.5 MB'
   },
@@ -40,6 +30,7 @@ const reports = ref<Report[]>([
 ])
 
 const loading = ref(false)
+const downloadLoading = ref<number[]>([])
 const searchQuery = ref('')
 
 // 使用计算属性过滤报告
@@ -49,9 +40,37 @@ const filteredReports = computed(() => {
   )
 })
 
-// 下载报告（模拟）
+// 下载报告
 const downloadReport = async (report: Report) => {
-  ElMessage.info('下载功能将在后端服务接入后启用')
+  if (downloadLoading.value.includes(report.id)) {
+    return
+  }
+  
+  downloadLoading.value.push(report.id)
+  try {
+    const blob = await reportApi.downloadReport(report.fileName)
+    
+    // 创建下载链接
+    const url = window.URL.createObjectURL(blob)
+    
+    // 创建一个临时的 a 标签来触发下载
+    const link = document.createElement('a')
+    link.href = url
+    link.download = report.fileName // 使用原始文件名
+    document.body.appendChild(link)
+    link.click()
+    
+    // 清理
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+    
+    ElMessage.success('下载成功')
+  } catch (error) {
+    console.error('下载失败:', error)
+    ElMessage.error('文件下载失败')
+  } finally {
+    downloadLoading.value = downloadLoading.value.filter(id => id !== report.id)
+  }
 }
 
 // 动画引用
@@ -67,8 +86,6 @@ const { isSupported } = useMotion(listRef, {
     }
   }
 })
-
-// 移除 onMounted 钩子，因为不需要初始加载数据
 </script>
 
 <template>
@@ -123,12 +140,13 @@ const { isSupported } = useMotion(listRef, {
             <button 
               class="download-button"
               @click="downloadReport(report)"
+              :disabled="downloadLoading.includes(report.id)"
             >
               <span class="button-content">
                 <svg viewBox="0 0 24 24" class="download-icon">
                   <path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z"/>
                 </svg>
-                下载报告
+                {{ downloadLoading.includes(report.id) ? '下载中...' : '下载报告' }}
               </span>
             </button>
           </div>
@@ -458,5 +476,11 @@ const { isSupported } = useMotion(listRef, {
   .search-input:focus + .search-icon {
     color: #3498db;
   }
+}
+
+/* 添加下载按钮禁用状态的样式 */
+.download-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style> 
