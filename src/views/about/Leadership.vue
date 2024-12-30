@@ -7,7 +7,7 @@ const leaders = ref([
     name: '蒂法',
     position: '教授',
     research: '人工智能',
-    imageUrl: 'http://120.26.90.87:9091/images/01.jpg' // 替换成实际的远程图片URL
+    imageUrl: '/images/director.jpg' // 替换成实际的远程图片URL
   },
   // ... 其他领导数据
 ])
